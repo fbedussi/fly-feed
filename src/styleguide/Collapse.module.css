@@ -1,0 +1,7 @@
+.collapseOpen {
+  display: block;
+}
+
+.collapseClosed {
+  display: none;
+}

@@ -1,0 +1,7 @@
+.menuButton {
+  place-self: center start;
+}
+
+.updateButton {
+  place-self: center end;
+}
