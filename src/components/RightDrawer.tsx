@@ -1,24 +1,18 @@
 import {
-  collection, getDocs, query,
-  where
-} from 'firebase/firestore'
-import {
-  Accessor, Component, createResource,
-  createSignal, For
+  Component,
+  createSignal
 } from 'solid-js'
 
-import { db } from '../backend/init'
 import { logoutBe } from '../backend/login'
-import { User, UserDataDb } from '../model'
 import {
-  leftDrawerOpen, rightDrawerOpen, setLeftDrawerOpen,
-  setRightDrawerOpen, setUser, user
+  rightDrawerOpen,
+  setRightDrawerOpen, setUser
 } from '../state'
 import {
   AddIcon, Button, CloseIcon,
-  Drawer, FileDownloadIcon, FileUploadIcon,
-  IconButton, Modal, Paper,
-  SettingsIcon, TextField, Typography
+  Drawer, FileDownloadIcon,
+  IconButton,
+  TextField,
 } from '../styleguide'
 import LogoutModal from './LogoutModal'
 import styles from './RightDrawer.module.css'
@@ -43,13 +37,10 @@ const RightDrawer: Component = () => {
   const [openLogoutModal, setOpenLogoutModal] = createSignal(false);
 
   return (
-    <>
+    <Drawer open={rightDrawerOpen()} anchor="right" onClose={() => setRightDrawerOpen(false)}>
       <LogoutModal open={openLogoutModal} handleClose={() => setOpenLogoutModal(false)} />
 
-      <div class={[styles.overlay, rightDrawerOpen() ? styles.isOpen : ''].join(' ')}
-        onClick={() => setRightDrawerOpen(false)}
-      />
-      <div class={[styles.rightDrawer, rightDrawerOpen() ? styles.isOpen : ''].join(' ')}>
+      <div class={styles.rightDrawerInner}>
         <div class={styles.closeButtonWrapper}>
           <IconButton
             size="large"
@@ -102,7 +93,7 @@ const RightDrawer: Component = () => {
           <Button variant="text" onClick={() => setOpenLogoutModal(true)}>Logout</Button>
         </div>
       </div>
-    </>
+    </Drawer>
   );
 }
 

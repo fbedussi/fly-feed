@@ -4,7 +4,7 @@ import { Component, createResource, For } from 'solid-js'
 import { db } from '../backend/init'
 import { User, UserDataDb } from '../model'
 import { leftDrawerOpen, setLeftDrawerOpen, user } from '../state'
-import { Badge, Button, CloseIcon, Divider, IconButton, List, ListItem, ListItemButton, ListItemText, TextField } from '../styleguide'
+import { CloseIcon, Divider, Drawer, IconButton, List, TextField } from '../styleguide'
 import Category from './Category'
 import styles from './LeftDrawer.module.css'
 import Site from './Site'
@@ -22,14 +22,11 @@ const fetchData = async (user: User) => {
 }
 
 const LeftDrawer: Component = () => {
-  const [data, { mutate, refetch }] = createResource(user, fetchData);
+  const [data] = createResource(user, fetchData);
 
   return (
-    <>
-      <div class={[styles.overlay, leftDrawerOpen() ? styles.isOpen : ''].join(' ')}
-        onClick={() => setLeftDrawerOpen(false)}
-      />
-      <div class={[styles.leftDrawer, leftDrawerOpen() ? styles.isOpen : ''].join(' ')}>
+    <Drawer open={leftDrawerOpen()} anchor="left" onClose={() => setLeftDrawerOpen(false)}>
+      <div class={styles.leftDrawerInner}>
         <div class={styles.closeButtonWrapper}>
           <IconButton
             size="large"
@@ -68,7 +65,7 @@ const LeftDrawer: Component = () => {
           </div>
         </div>
       </div>
-    </>
+    </Drawer>
   );
 }
 
