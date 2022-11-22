@@ -1,5 +1,5 @@
 import { doc, getDoc } from 'firebase/firestore'
-import { Component, createResource, For } from 'solid-js'
+import { Component, createResource, createSignal, For, Show } from 'solid-js'
 
 import { db } from '../backend/init'
 import { User, UserDataDb } from '../model'
@@ -24,6 +24,13 @@ const fetchData = async (user: User) => {
 const LeftDrawer: Component = () => {
   const [data] = createResource(user, fetchData);
 
+  const [searchTerm, setSearchTerm] = createSignal('')
+
+  const getSitesThatMatchSearchTerm = () => data()?.sites
+    .concat(data()?.categories.flatMap(({ sites }) => sites) || [])
+    .filter(({ title }) =>
+      title.toLowerCase().includes(searchTerm().toLowerCase()))
+
   return (
     <Drawer open={leftDrawerOpen()} anchor="left" onClose={() => setLeftDrawerOpen(false)}>
       <div class={styles.leftDrawerInner}>
@@ -45,23 +52,35 @@ const LeftDrawer: Component = () => {
               id="search-box"
               label="Search sites by name"
               variant="outlined"
+              value={searchTerm()}
+              onChange={e => setSearchTerm(e.currentTarget.value)}
               fullWidth
             />
           </div>
           <div class={styles.subscriptions}>
-            <List>
-              <For each={data()?.categories}>
-                {(category, i) => <Category category={category} />}
-              </For>
-            </List>
+            <Show when={!searchTerm()}>
+              <List>
+                <For each={data()?.categories}>
+                  {(category, i) => <Category category={category} />}
+                </For>
+              </List>
 
-            <Divider />
+              <Divider />
 
-            <List>
-              <For each={data()?.sites}>
-                {(site, i) => <Site site={site} />}
-              </For>
-            </List>
+              <List>
+                <For each={data()?.sites}>
+                  {(site, i) => <Site site={site} />}
+                </For>
+              </List>
+            </Show>
+
+            <Show when={searchTerm()}>
+              <List>
+                <For each={getSitesThatMatchSearchTerm()}>
+                  {(site, i) => <Site site={site} />}
+                </For>
+              </List>
+            </Show>
           </div>
         </div>
       </div>
