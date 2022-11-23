@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from '@suid/material'
 
 // import './index.css';
 import App from './App'
+import { Router } from '@solidjs/router'
 
 const theme = createTheme({
   palette: {
@@ -15,5 +16,7 @@ const theme = createTheme({
 });
 
 render(() => <ThemeProvider theme={theme}>
-  <App />
+  <Router>
+    <App />
+  </Router>
 </ThemeProvider>, document.getElementById('root') as HTMLElement);

@@ -17,6 +17,7 @@
     "vite-plugin-solid": "^2.3.10"
   },
   "dependencies": {
+    "@solidjs/router": "^0.5.1",
     "@suid/icons-material": "^0.4.1",
     "@suid/material": "^0.7.0",
     "firebase": "^9.14.0",

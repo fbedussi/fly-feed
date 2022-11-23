@@ -55,12 +55,7 @@ const RightDrawer: Component = () => {
         </div>
         <div class={styles.content}>
 
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-          >
-            add category
-          </Button>
+
 
           <Button
             variant="outlined"

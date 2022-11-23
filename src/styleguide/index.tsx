@@ -19,6 +19,10 @@ import Toolbar from '@suid/material/Toolbar'
 import Typography from '@suid/material/Typography'
 import ExpandMoreIcon from '@suid/icons-material/ExpandMore';
 import ExpandLessIcon from '@suid/icons-material/ExpandLess';
+import FolderIcon from '@suid/icons-material/Folder';
+import FolderOpenIcon from '@suid/icons-material/FolderOpen';
+import EditIcon from '@suid/icons-material/Edit';
+import DeleteIcon from '@suid/icons-material/Delete';
 
 export {
   MenuIcon,
@@ -49,4 +53,8 @@ export {
   Badge,
   ExpandMoreIcon,
   ExpandLessIcon,
+  FolderIcon,
+  FolderOpenIcon,
+  EditIcon,
+  DeleteIcon,
 }
