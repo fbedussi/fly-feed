@@ -1,7 +1,9 @@
-import { Component } from 'solid-js'
+import { Component, Show } from 'solid-js'
 import { SiteDb } from '../model'
-import { Badge, ListItem, ListItemButton, ListItemText } from '../styleguide'
+import { Badge, DeleteIcon, EditIcon, IconButton, ListItem, ListItemButton, ListItemText } from '../styleguide'
 import { useSearchParams } from '@solidjs/router'
+
+import styles from './Site.module.css'
 
 type Props = {
   site: SiteDb
@@ -25,6 +27,17 @@ const Site: Component<Props> = (props) => {
         <Badge badgeContent={4} color="primary">
           <ListItemText primary={props.site.title} />
         </Badge>
+
+        <div class={styles.buttons}>
+          <Show when={isSelected()}>
+            <IconButton size="small" sx={{ color: 'white' }}>
+              <EditIcon />
+            </IconButton>
+            <IconButton size="small" sx={{ color: 'white' }}>
+              <DeleteIcon />
+            </IconButton>
+          </Show>
+        </div>
       </ListItemButton>
     </ListItem>
   )
