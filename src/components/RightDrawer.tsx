@@ -9,7 +9,7 @@ import {
   setRightDrawerOpen, setUser
 } from '../state'
 import {
-  AddIcon, Button, CloseIcon,
+  Button, CloseIcon,
   Drawer, FileDownloadIcon,
   IconButton,
   TextField,
@@ -54,16 +54,6 @@ const RightDrawer: Component = () => {
           </IconButton>
         </div>
         <div class={styles.content}>
-
-
-
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-          >
-            add site
-          </Button>
-
           <ImportButton />
 
           <Button

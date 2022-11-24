@@ -1,33 +1,19 @@
-import { doc, getDoc } from 'firebase/firestore'
-import { Component, createResource, createSignal, For, Show } from 'solid-js'
+import { Component, createSignal, For, Show } from 'solid-js'
 
-import { db } from '../backend/init'
-import { User, UserDataDb } from '../model'
 import { leftDrawerOpen, setLeftDrawerOpen, user } from '../state'
 import { AddIcon, Button, CloseIcon, Drawer, IconButton, List, TextField } from '../styleguide'
 import Category from './Category'
 import styles from './LeftDrawer.module.css'
 import Site from './Site'
-
-const fetchData = async (user: User) => {
-  const userId = user.id
-  if (!userId) {
-    throw new Error('missing userId')
-  }
-
-  const docRef = doc(db, 'subscriptions', userId);
-  const querySnapshot = await getDoc(docRef);
-  const data = querySnapshot.data() as UserDataDb
-  return data
-}
+import { useGetSubscriptions } from '../primitives/useGetSubscriptions';
+import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions'
 
 const LeftDrawer: Component = () => {
-  const [data] = createResource(user, fetchData);
+  const [data] = useGetSubscriptions()
 
   const [searchTerm, setSearchTerm] = createSignal('')
 
-  const getSitesThatMatchSearchTerm = () => data()?.sites
-    .concat(data()?.categories.flatMap(({ sites }) => sites) || [])
+  const getSitesThatMatchSearchTerm = () => useGetSitesFromSubscriptions(data())
     .filter(({ title }) =>
       title.toLowerCase().includes(searchTerm().toLowerCase()))
 

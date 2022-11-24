@@ -6,6 +6,7 @@ import Site from './Site';
 import { useSearchParams } from '@solidjs/router'
 
 import styles from './Category.module.css'
+import { articles } from '../state';
 type Props = {
   category: CategoryDb
 }
@@ -18,6 +19,8 @@ const Category: Component<Props> = (props) => {
     return categoryIdOpened === props.category.id
   }
 
+  const getNumberOfNewArticles = () => articles().filter(({ categoryId }) => categoryId === props.category.id).length
+
   return (
     <ListItem disablePadding sx={{
       flexDirection: 'column',
@@ -25,7 +28,11 @@ const Category: Component<Props> = (props) => {
       border: 'solid 1px lightgray'
     }}>
       <ListItemButton onClick={() => {
-        setSearchParams({ ...searchParams, category: props.category.id }, { replace: true })
+        if (searchParams.category === props.category.id) {
+          setSearchParams({ ...searchParams, category: undefined }, { replace: true })
+        } else {
+          setSearchParams({ ...searchParams, category: props.category.id }, { replace: true })
+        }
       }} sx={{
         width: '100%',
         gap: '1rem',
@@ -33,7 +40,7 @@ const Category: Component<Props> = (props) => {
         color: isOpen() ? 'white' : 'inherit',
       }}>
         {isOpen() ? <FolderOpenIcon /> : <FolderIcon />}
-        <Badge badgeContent={4} color="primary">
+        <Badge badgeContent={getNumberOfNewArticles()} color="primary">
           <ListItemText primary={props.category.name} />
         </Badge>
         <div class={styles.buttons}>

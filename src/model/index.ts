@@ -26,8 +26,36 @@ export type CategoryDb = {
   sites: SiteDb[]
 }
 
-export type UserDataDb = {
+export type Category = CategoryDb & {
+  newArticles: number
+}
+
+export type SubscriptionsDb = {
   sites: SiteDb[]
   categories: CategoryDb[]
 }
 
+export type Subscriptions = {
+  sites: Site[]
+  categories: Category[]
+}
+
+export type Article = {
+  content: string
+  isoDate: IsoDate
+  link: string
+  title: string
+  starred: boolean
+}
+
+export type FetchOk = {
+  categoryId: string
+  siteId: string
+  article: Article
+}
+
+export type FetchKo = {
+  categoryId: string
+  siteId: string
+  errorTimestamp: string
+}
