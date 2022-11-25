@@ -13,7 +13,7 @@ import { Logo } from './logo'
 
 const Header = () => {
   return (
-    <AppBar position="static" color="transparent" >
+    <AppBar position="static" color="transparent" sx={{ zIndex: 1 }}>
       <Toolbar sx={{
         display: 'grid',
         gridTemplateColumns: '1fr auto 1fr',
