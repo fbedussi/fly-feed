@@ -1,13 +1,16 @@
-import { Component } from 'solid-js'
+import { Component, createSignal } from 'solid-js'
 import { Article, FetchKo, FetchOk } from '../model'
 import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions'
 import { useGetSubscriptions } from '../primitives/useGetSubscriptions'
 import { setArticles } from '../state'
 
 import { AutorenewIcon, Fab } from '../styleguide'
+import openDb from '../cache';
 
 const UpdateButton: Component = () => {
   const [data] = useGetSubscriptions()
+
+  const [updating, setUpdating] = createSignal(false)
 
   return (
     <Fab color="primary" sx={{
@@ -16,9 +19,10 @@ const UpdateButton: Component = () => {
       right: '1rem',
     }}
       onClick={async () => {
+        setUpdating(true)
         const substriptions = data()
         const sites = useGetSitesFromSubscriptions(substriptions)
-        const sitesToFetch = sites.filter(({ xmlUrl }) => xmlUrl).slice(2, 3)
+        const sitesToFetch = sites.filter(({ xmlUrl }) => xmlUrl)
 
         const updates = await Promise.all(
           sitesToFetch
@@ -53,10 +57,16 @@ const UpdateButton: Component = () => {
         // TODO: save errors to subscriptions
 
         setArticles(articles)
-        sessionStorage.setItem('fly-feed-updates', JSON.stringify({ updatedAt: new Date().toISOString(), articles }))
+        setUpdating(false)
+        openDb().then((db: any) => db.saveCache({ updatedAt: new Date().toISOString(), articles }))
       }}
     >
-      <AutorenewIcon />
+      <AutorenewIcon sx={{
+        animationName: updating() ? 'spin' : 'none',
+        animationDuration: '5000ms',
+        animationIterationCount: 'infinite',
+        animationTimingFunction: 'linear',
+      }} />
     </Fab>
   )
 }
