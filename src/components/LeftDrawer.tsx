@@ -1,7 +1,7 @@
 import { Component, createSignal, For, Show } from 'solid-js'
 
 import { leftDrawerOpen, setLeftDrawerOpen, user } from '../state'
-import { AddIcon, Button, CloseIcon, Drawer, IconButton, List, TextField } from '../styleguide'
+import { AddIcon, Button, CloseIcon, Drawer, IconButton, List, TextField, Typography } from '../styleguide'
 import Category from './Category'
 import styles from './LeftDrawer.module.css'
 import Site from './Site'
@@ -43,21 +43,27 @@ const LeftDrawer: Component = () => {
             />
           </div>
 
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-          >
-            add category
-          </Button>
-
           <div class={styles.subscriptions}>
             <Show when={!searchTerm()}>
+
+              <Typography variant="h6" gutterBottom component="div" class={styles.title}>
+                <span>Categories</span>
+                <IconButton>
+                  <AddIcon />
+                </IconButton>
+              </Typography>
               <List>
                 <For each={data()?.categories}>
                   {(category, i) => <Category category={category} />}
                 </For>
               </List>
 
+              <Typography variant="h6" gutterBottom component="div" class={styles.title}>
+                <span>Sites</span>
+                <IconButton>
+                  <AddIcon />
+                </IconButton>
+              </Typography>
               <List>
                 <For each={data()?.sites}>
                   {(site, i) => <Site site={site} />}
