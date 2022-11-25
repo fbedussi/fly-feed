@@ -6,7 +6,7 @@ import FileDownloadIcon from '@suid/icons-material/FileDownload'
 import FileUploadIcon from '@suid/icons-material/FileUpload'
 import MenuIcon from '@suid/icons-material/Menu'
 import SettingsIcon from '@suid/icons-material/Settings'
-import { Badge, Card, CardActions, CardContent, Divider, Input, List, ListItem, ListItemButton, ListItemText, Paper } from '@suid/material'
+import { Badge, Card, CardActions, CardContent, Divider, Input, Link, List, ListItem, ListItemButton, ListItemText, Paper } from '@suid/material'
 import AppBar from '@suid/material/AppBar'
 import Button from '@suid/material/Button'
 import CircularProgress from '@suid/material/CircularProgress'
@@ -60,4 +60,5 @@ export {
   Card,
   CardContent,
   CardActions,
+  Link,
 }

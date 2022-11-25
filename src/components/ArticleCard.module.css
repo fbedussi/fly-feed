@@ -1,4 +1,36 @@
-.articleContent {
-  max-height: 6rem;
+.listItem {
+  width: 100%;
+  height: 100%;
+
+  /* leave room for the shadow */
+  padding: 3px;
+}
+
+.card {
+  height: calc(100% - 1rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.cardContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
+}
+
+.articleContent {
+  flex: 1;
+  overflow: hidden;
+}
+
+.title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.readMore {
+  text-transform: uppercase;
+  text-decoration: none;
 }
