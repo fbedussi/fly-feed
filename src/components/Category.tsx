@@ -35,10 +35,7 @@ const Category: Component<Props> = (props) => {
             setSearchParams({ ...searchParams, category: props.category.id }, { replace: true })
           }
         }}
-        sx={{
-          backgroundColor: isOpen() ? '#777' : 'transparent',
-          color: isOpen() ? 'white' : 'inherit',
-        }}
+        classList={{ [styles.open]: isOpen() }}
         class={styles.categoryButton}
       >
         {isOpen() ? <FolderOpenIcon /> : <FolderIcon />}

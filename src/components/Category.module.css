@@ -3,7 +3,12 @@
   gap: 1rem;
 }
 
-.categoryButton:hover {
+.categoryButton.open {
+  background-color: #777;
+  color: white;
+}
+
+.categoryButton.open:hover {
   color: black;
 }
 

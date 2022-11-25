@@ -45,7 +45,6 @@ const RightDrawer: Component = () => {
           <IconButton
             size="large"
             edge="start"
-            color="primary"
             aria-label="menu"
             sx={{ mr: 2 }}
             onClick={() => setRightDrawerOpen(false)}

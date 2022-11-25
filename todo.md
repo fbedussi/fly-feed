@@ -1,0 +1,3 @@
+- CRUD categorie/articoli
+- salvataggio e uso parametri
+- aricle preview slidedown
