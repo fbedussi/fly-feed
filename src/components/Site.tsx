@@ -39,10 +39,10 @@ const Site: Component<Props> = (props) => {
 
         <div class={styles.buttons}>
           <Show when={isSelected()}>
-            <IconButton size="small" sx={{ color: 'white' }}>
+            <IconButton size="small" >
               <EditIcon />
             </IconButton>
-            <IconButton size="small" sx={{ color: 'white' }}>
+            <IconButton size="small" >
               <DeleteIcon />
             </IconButton>
           </Show>

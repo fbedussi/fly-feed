@@ -27,31 +27,33 @@ const Category: Component<Props> = (props) => {
       alignItems: 'start',
       border: 'solid 1px lightgray'
     }}>
-      <ListItemButton onClick={() => {
-        if (searchParams.category === props.category.id) {
-          setSearchParams({ ...searchParams, category: undefined }, { replace: true })
-        } else {
-          setSearchParams({ ...searchParams, category: props.category.id }, { replace: true })
-        }
-      }} sx={{
-        width: '100%',
-        gap: '1rem',
-        backgroundColor: isOpen() ? '#777' : 'transparent',
-        color: isOpen() ? 'white' : 'inherit',
-      }}>
+      <ListItemButton
+        onClick={() => {
+          if (searchParams.category === props.category.id) {
+            setSearchParams({ ...searchParams, category: undefined }, { replace: true })
+          } else {
+            setSearchParams({ ...searchParams, category: props.category.id }, { replace: true })
+          }
+        }}
+        sx={{
+          backgroundColor: isOpen() ? '#777' : 'transparent',
+          color: isOpen() ? 'white' : 'inherit',
+        }}
+        class={styles.categoryButton}
+      >
         {isOpen() ? <FolderOpenIcon /> : <FolderIcon />}
         <Badge badgeContent={getNumberOfNewArticles()} color="primary">
           <ListItemText primary={props.category.name} />
         </Badge>
         <div class={styles.buttons}>
           <Show when={isOpen()}>
-            <IconButton size="small" sx={{ color: 'white' }}>
+            <IconButton size="small" >
               <AddIcon />
             </IconButton>
-            <IconButton size="small" sx={{ color: 'white' }}>
+            <IconButton size="small" >
               <EditIcon />
             </IconButton>
-            <IconButton size="small" sx={{ color: 'white' }}>
+            <IconButton size="small" >
               <DeleteIcon />
             </IconButton>
           </Show>

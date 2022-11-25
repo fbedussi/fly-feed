@@ -1,3 +1,12 @@
+.categoryButton {
+  width: 100%;
+  gap: 1rem;
+}
+
+.categoryButton:hover {
+  color: black;
+}
+
 .buttons {
   display: flex;
   flex: 1;
