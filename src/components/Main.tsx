@@ -1,4 +1,4 @@
-import { Component } from 'solid-js';
+import { Component, createEffect } from 'solid-js';
 
 import styles from './Main.module.css'
 import { articles, subscriptions } from '../state';
@@ -15,12 +15,24 @@ const Main: Component = () => {
     return subscriptions.categories.find(({ id }) => id === selectedCategoryId)?.name
   }
 
+  createEffect(() => {
+    if (!getSelectedCategoryName()) {
+      setSearchParams({ category: undefined })
+    }
+  })
+
   const getSelectedSiteName = () => {
     const selectedSiteId = searchParams.site
     return subscriptions.sites
       .concat(subscriptions.categories.flatMap(({ sites }) => sites))
       .find(({ id }) => id === selectedSiteId)?.title
   }
+
+  createEffect(() => {
+    if (!getSelectedSiteName()) {
+      setSearchParams({ site: undefined })
+    }
+  })
 
   const getFilteredArticles = () => articles()
     .filter(({ categoryId, siteId }) => {
