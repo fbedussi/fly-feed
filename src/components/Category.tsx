@@ -60,6 +60,11 @@ const Category: Component<Props> = (props) => {
             </Badge>
           )}
         <div class={styles.buttons}>
+          {isEditing() && (
+            <IconButton size="small">
+              <SaveIcon />
+            </IconButton>
+          )}
           <Show when={isOpen() && !isEditing()}>
             <IconButton size="small" >
               <AddIcon onClick={(e) => {
@@ -76,17 +81,23 @@ const Category: Component<Props> = (props) => {
                 }))
               }} />
             </IconButton>
-            <IconButton size="small" >
-              <EditIcon onClick={(e) => {
-                e.stopPropagation()
+            <IconButton
+              size="small"
+              onClick={(e) => {
                 setIsEditing(true)
-              }} />
+              }}
+            >
+              <EditIcon />
             </IconButton>
-            <IconButton size="small" >
-              <DeleteIcon onClick={(e) => {
+            <IconButton
+              size="small"
+              onClick={(e) => {
                 e.stopPropagation()
                 setSubscriptions('categories', prev => prev.filter(({ id }) => id !== props.category.id))
-              }} />
+                setSearchParams({ category: undefined }, { replace: true })
+              }}
+            >
+              <DeleteIcon />
             </IconButton>
           </Show>
         </div>
@@ -95,7 +106,7 @@ const Category: Component<Props> = (props) => {
       <Collapse in={isOpen()} >
         <List component="div" disablePadding>
           <For each={props.category.sites}>
-            {(site, i) => <Site site={site} />}
+            {(site, i) => <Site site={site} categoryId={props.category.id} />}
           </For>
         </List>
       </Collapse>

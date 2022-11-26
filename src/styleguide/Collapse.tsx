@@ -7,7 +7,7 @@ type Props = {
 
 const Collapse: ParentComponent<Props> = (props) => {
   return (
-    <div class={props.in ? styles.collapseOpen : styles.collapseClosed}>
+    <div class={styles.collapse} classList={{ [styles.open]: props.in }}>
       {props.children}
     </div>
   )

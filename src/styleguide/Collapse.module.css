@@ -1,7 +1,8 @@
-.collapseOpen {
-  display: block;
+.collapse {
+  width: 100%;
+  display: none;
 }
 
-.collapseClosed {
-  display: none;
+.collapse.open {
+  display: block;
 }

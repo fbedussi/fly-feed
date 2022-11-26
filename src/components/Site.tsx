@@ -1,18 +1,28 @@
-import { Component, Show } from 'solid-js'
+import { Component, createEffect, createSignal, Show } from 'solid-js'
 import { SiteDb } from '../model'
-import { Badge, DeleteIcon, EditIcon, IconButton, ListItem, ListItemButton, ListItemText } from '../styleguide'
+import { Badge, DeleteIcon, EditIcon, IconButton, ListItem, ListItemButton, ListItemText, SaveIcon } from '../styleguide'
 import { useSearchParams } from '@solidjs/router'
 
 import styles from './Site.module.css'
-import { articles } from '../state'
+import { articles, setSubscriptions } from '../state'
 
 type Props = {
   site: SiteDb
+  categoryId?: string
   sx?: Record<string, any>
 }
 
 const Site: Component<Props> = (props) => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const [isEditing, setIsEditing] = createSignal(props.site.title === 'new site')
+
+  let inputEl: HTMLInputElement | undefined
+  createEffect(() => {
+    if (isEditing()) {
+      inputEl?.select()
+    }
+  })
 
   const isSelected = () => {
     const siteIdSelected = searchParams.site
@@ -33,16 +43,51 @@ const Site: Component<Props> = (props) => {
           setSearchParams({ ...searchParams, site: props.site.id }, { replace: true })
         }
       }}>
-        <Badge badgeContent={getNumberOfNewArticles()} color="primary">
-          <ListItemText primary={props.site.title} />
-        </Badge>
+        {isEditing()
+          ? <input ref={inputEl} type="text" value={props.site.title} onBlur={(e) => {
+            if (!props.categoryId) {
+              setSubscriptions('sites', site => site.id === props.site.id, prev => ({ ...prev, title: e.currentTarget.value }))
+            } else {
+              setSubscriptions('categories', category => category.id === props.categoryId, category => ({
+                ...category,
+                sites: category.sites.map(site => site.id === props.site.id ? { ...site, title: e.currentTarget.value } : site)
+              }))
+            }
+            setIsEditing(false)
+          }} />
+          : (
+            <Badge badgeContent={getNumberOfNewArticles()} color="primary">
+              <ListItemText primary={props.site.title} />
+            </Badge>
+          )}
 
         <div class={styles.buttons}>
-          <Show when={isSelected()}>
-            <IconButton size="small" >
+          {isEditing() && (
+            <IconButton size="small">
+              <SaveIcon />
+            </IconButton>
+          )}
+          <Show when={isSelected() && !isEditing()}>
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                setIsEditing(true)
+              }}
+            >
               <EditIcon />
             </IconButton>
-            <IconButton size="small" >
+            <IconButton size="small" onClick={(e) => {
+              e.stopPropagation()
+              if (!props.categoryId) {
+                setSubscriptions('sites', prev => prev.filter(({ id }) => id !== props.site.id))
+              } else {
+                setSubscriptions('categories', category => category.id === props.categoryId, category => ({
+                  ...category,
+                  sites: category.sites.filter(site => site.id !== props.site.id)
+                }))
+              }
+              setSearchParams({ site: undefined }, { replace: true })
+            }}>
               <DeleteIcon />
             </IconButton>
           </Show>

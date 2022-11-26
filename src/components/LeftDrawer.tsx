@@ -7,8 +7,11 @@ import styles from './LeftDrawer.module.css'
 import Site from './Site'
 import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions'
 import shortid from 'shortid'
+import { useSearchParams } from '@solidjs/router';
 
 const LeftDrawer: Component = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [searchTerm, setSearchTerm] = createSignal('')
 
   const getSitesThatMatchSearchTerm = () => useGetSitesFromSubscriptions(subscriptions)
@@ -48,11 +51,13 @@ const LeftDrawer: Component = () => {
                 <span>Categories</span>
                 <IconButton>
                   <AddIcon onClick={() => {
+                    const newCategoryId = shortid.generate()
                     setSubscriptions('categories', (prev) => [{
-                      id: shortid.generate(),
+                      id: newCategoryId,
                       name: 'new category',
                       sites: [],
                     }, ...prev])
+                    setSearchParams({ ...searchParams, category: newCategoryId }, { replace: true })
                   }} />
                 </IconButton>
               </Typography>
