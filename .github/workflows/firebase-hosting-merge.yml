@@ -11,7 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm ci && npm run build
+      - name: build
+        run: npm ci && npm run build
+        env:
+          VITE_APIKEY: '${{ secrets.VITE_APIKEY }}'
+          VITE_AUTHDOMAIN: '${{ secrets.VITE_AUTHDOMAIN }}'
+          VITE_PROJECTID: '${{ secrets.VITE_PROJECTID }}'
+          VITE_STORAGEBUCKET: '${{ secrets.VITE_STORAGEBUCKET }}'
+          VITE_MESSAGINGSENDERID: '${{ secrets.VITE_MESSAGINGSENDERID }}'
+          VITE_APPID: '${{ secrets.VITE_APPID }}'
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
