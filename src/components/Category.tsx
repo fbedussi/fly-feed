@@ -52,6 +52,7 @@ const Category: Component<Props> = (props) => {
         {isEditing()
           ? <input ref={inputEl} type="text" value={props.category.name} onBlur={(e) => {
             setSubscriptions('categories', category => category.id === props.category.id, prev => ({ ...prev, name: e.currentTarget.value }))
+            setSubscriptions('draft', true)
             setIsEditing(false)
           }} />
           : (
@@ -79,6 +80,7 @@ const Category: Component<Props> = (props) => {
                     errorTimestamps: [],
                   })
                 }))
+                setSubscriptions('draft', true)
               }} />
             </IconButton>
             <IconButton
@@ -94,6 +96,7 @@ const Category: Component<Props> = (props) => {
               onClick={(e) => {
                 e.stopPropagation()
                 setSubscriptions('categories', prev => prev.filter(({ id }) => id !== props.category.id))
+                setSubscriptions('draft', true)
                 setSearchParams({ category: undefined }, { replace: true })
               }}
             >

@@ -57,6 +57,7 @@ const LeftDrawer: Component = () => {
                       name: 'new category',
                       sites: [],
                     }, ...prev])
+                    setSubscriptions('draft', true)
                     setSearchParams({ ...searchParams, category: newCategoryId }, { replace: true })
                   }} />
                 </IconButton>
@@ -79,6 +80,7 @@ const LeftDrawer: Component = () => {
                       starred: false,
                       errorTimestamps: [],
                     }, ...prev])
+                    setSubscriptions('draft', true)
                   }} />
                 </IconButton>
               </Typography>

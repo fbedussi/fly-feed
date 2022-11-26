@@ -7,7 +7,7 @@ import UpdateButton from '../components/UpdateButton'
 import Main from '../components/Main'
 import { setArticles, setSubscriptions } from '../state'
 import openDb from '../cache'
-import { useGetSubscriptions } from '../primitives/useGetSubscriptions'
+import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db'
 
 const HomePage: Component = () => {
   onMount(async () => {
@@ -25,6 +25,8 @@ const HomePage: Component = () => {
       }
     })
   });
+
+  useSetSubscriptions()
 
   return (
     <>

@@ -56,6 +56,7 @@ const Site: Component<Props> = (props) => {
                 sites: category.sites.map(site => site.id === props.site.id ? { ...site, title: e.currentTarget.value } : site)
               }))
             }
+            setSubscriptions('draft', true)
             setIsEditing(false)
           }} />
           : (
@@ -93,6 +94,7 @@ const Site: Component<Props> = (props) => {
                   sites: category.sites.filter(site => site.id !== props.site.id)
                 }))
               }
+              setSubscriptions('draft', true)
               setSearchParams({ site: undefined }, { replace: true })
             }}>
               <DeleteIcon />
