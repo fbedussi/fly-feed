@@ -21,9 +21,11 @@ const ArticleCard: Component<VirtualItemProps<{ article: Article, siteId: string
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             {getSiteName()}
           </Typography>
-          <Typography variant="h5" component="div" class="textEllipsis">
-            {props.item.article.title}
-          </Typography>
+          <a href={props.item.article.link} target="_blank">
+            <Typography variant="h6" component="div" class="textEllipsis">
+              {props.item.article.title}
+            </Typography>
+          </a>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             {date.toLocaleString(navigator.language, {
               weekday: "long",
