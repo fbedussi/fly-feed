@@ -36,18 +36,33 @@ const Main: Component = () => {
     })
 
   let scrollTargetElement!: HTMLDivElement
+
   return (
     <main class={styles.main} ref={scrollTargetElement}>
       <div class={styles.selectionChips}>
         {getSelectedCategoryName() && (
-          <Chip label={getSelectedCategoryName()} variant="outlined" color="primary" onDelete={() => {
-            setSearchParams({ category: undefined }, { replace: true })
-          }} />
+          <Chip
+            class="textEllipsis"
+            sx={{ maxWidth: '50%' }}
+            label={getSelectedCategoryName()}
+            variant="outlined"
+            color="primary"
+            onDelete={() => {
+              setSearchParams({ category: undefined }, { replace: true })
+            }}
+          />
         )}
         {getSelectedSiteName() && (
-          <Chip label={getSelectedSiteName()} variant="outlined" color="secondary" onDelete={() => {
-            setSearchParams({ site: undefined }, { replace: true })
-          }} />
+          <Chip
+            class="textEllipsis"
+            sx={{ maxWidth: '50%' }}
+            label={getSelectedSiteName()}
+            variant="outlined"
+            color="secondary"
+            onDelete={() => {
+              setSearchParams({ site: undefined }, { replace: true })
+            }}
+          />
         )}
       </div>
       <VirtualContainer

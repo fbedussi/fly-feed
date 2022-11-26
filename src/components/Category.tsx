@@ -56,7 +56,7 @@ const Category: Component<Props> = (props) => {
           }} />
           : (
             <Badge badgeContent={getNumberOfNewArticles()} color="primary">
-              <ListItemText primary={props.category.name} />
+              <ListItemText primary={props.category.name} class="textEllipsis" />
             </Badge>
           )}
         <div class={styles.buttons}>

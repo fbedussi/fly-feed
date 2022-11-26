@@ -1,4 +1,5 @@
 .leftDrawerInner {
+  max-width: min(90vw, 30rem);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;

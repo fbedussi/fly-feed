@@ -36,13 +36,16 @@ const Site: Component<Props> = (props) => {
       ...props.sx,
       backgroundColor: isSelected() ? '#ccc' : 'inherit',
     }}>
-      <ListItemButton onClick={() => {
-        if (searchParams.site === props.site.id) {
-          setSearchParams({ ...searchParams, site: undefined }, { replace: true })
-        } else {
-          setSearchParams({ ...searchParams, site: props.site.id }, { replace: true })
-        }
-      }}>
+      <ListItemButton
+        sx={{ width: '100%' }}
+        onClick={() => {
+          if (searchParams.site === props.site.id) {
+            setSearchParams({ ...searchParams, site: undefined }, { replace: true })
+          } else {
+            setSearchParams({ ...searchParams, site: props.site.id }, { replace: true })
+          }
+        }}
+      >
         {isEditing()
           ? <input ref={inputEl} type="text" value={props.site.title} onBlur={(e) => {
             if (!props.categoryId) {
@@ -56,8 +59,12 @@ const Site: Component<Props> = (props) => {
             setIsEditing(false)
           }} />
           : (
-            <Badge badgeContent={getNumberOfNewArticles()} color="primary">
-              <ListItemText primary={props.site.title} />
+            <Badge
+              badgeContent={getNumberOfNewArticles()}
+              color="primary"
+              sx={{ maxWidth: isSelected() ? 'calc(100% - 5rem)' : 'calc(100% - 1rem)' }}
+            >
+              <ListItemText primary={props.site.title} class="textEllipsis" />
             </Badge>
           )}
 

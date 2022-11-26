@@ -24,12 +24,6 @@
   overflow: hidden;
 }
 
-.title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .readMore {
   text-transform: uppercase;
   text-decoration: none;

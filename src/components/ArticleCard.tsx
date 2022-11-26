@@ -21,7 +21,7 @@ const ArticleCard: Component<VirtualItemProps<{ article: Article, siteId: string
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             {getSiteName()}
           </Typography>
-          <Typography variant="h5" component="div" class={styles.title}>
+          <Typography variant="h5" component="div" class="textEllipsis">
             {props.item.article.title}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">

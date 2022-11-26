@@ -19,7 +19,7 @@ const LeftDrawer: Component = () => {
       title.toLowerCase().includes(searchTerm().toLowerCase()))
 
   return (
-    <Drawer open={leftDrawerOpen()} anchor="left" onClose={() => setLeftDrawerOpen(false)}>
+    <Drawer open={leftDrawerOpen()} anchor="left" onClose={() => setLeftDrawerOpen(false)} >
       <div class={styles.leftDrawerInner}>
         <div class={styles.closeButtonWrapper}>
           <IconButton
