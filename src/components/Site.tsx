@@ -4,7 +4,7 @@ import { Badge, DeleteIcon, EditIcon, IconButton, ListItem, ListItemButton, List
 import { useSearchParams } from '@solidjs/router'
 
 import styles from './Site.module.css'
-import { articles, setSubscriptions } from '../state'
+import { articles, MAX_ERRORS, setSubscriptions } from '../state'
 
 type Props = {
   site: SiteDb
@@ -67,7 +67,14 @@ const Site: Component<Props> = (props) => {
               color="primary"
               sx={{ maxWidth: isSelected() ? 'calc(100% - 5rem)' : 'calc(100% - 1rem)' }}
             >
-              <ListItemText primary={props.site.title} class="textEllipsis" />
+              <ListItemText
+                primary={props.site.title}
+                classList={{
+                  textEllipsis: true,
+                  [styles.withErrors]: !!props.site.errorTimestamps.length,
+                  [styles.withPermanentErrors]: props.site.errorTimestamps.length >= MAX_ERRORS,
+                }}
+              />
             </Badge>
           )}
 

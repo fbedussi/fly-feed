@@ -1,7 +1,7 @@
 import { Component, createSignal } from 'solid-js'
 import { Article, FetchKo, FetchOk } from '../model'
 import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions'
-import { articles, setArticles, setSubscriptions, subscriptions } from '../state'
+import { articles, MAX_ERRORS, setArticles, setSubscriptions, subscriptions } from '../state'
 
 import { AutorenewIcon, Fab } from '../styleguide'
 import openDb from '../cache';
@@ -25,7 +25,7 @@ const UpdateButton: Component = () => {
             const lastErrorTimestamp = lastErrorIsoDate && new Date(lastErrorIsoDate).getTime()
             const oneDay = 1000 * 60 * 60 * 24
             const recentError = !!lastErrorTimestamp && (Date.now() - lastErrorTimestamp) < oneDay
-            return !!xmlUrl && !recentError
+            return !!xmlUrl && !recentError && errorTimestamps.length < MAX_ERRORS
           })
 
         const updates = await Promise.all(

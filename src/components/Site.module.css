@@ -3,3 +3,12 @@
   flex: 1;
   justify-content: end;
 }
+
+.withErrors {
+  text-decoration: line-through;
+}
+
+.withPermanentErrors {
+  text-decoration: overline;
+  opacity: 0.5;
+}

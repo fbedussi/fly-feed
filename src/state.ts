@@ -21,3 +21,4 @@ export const [subscriptions, setSubscriptions] = createStore<SubscriptionsDb & {
   categories: [],
 })
 
+export const MAX_ERRORS = 10
