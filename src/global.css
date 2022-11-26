@@ -11,6 +11,13 @@ button {
   appearance: none;
 }
 
+input {
+  background: none;
+  border: none;
+  font: inherit;
+  outline: none;
+}
+
 svg {
   fill: currentColor;
 }

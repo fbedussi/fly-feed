@@ -23,6 +23,7 @@ import FolderIcon from '@suid/icons-material/Folder';
 import FolderOpenIcon from '@suid/icons-material/FolderOpen';
 import EditIcon from '@suid/icons-material/Edit';
 import DeleteIcon from '@suid/icons-material/Delete';
+import SaveIcon from '@suid/icons-material/Save';
 
 export {
   MenuIcon,
@@ -61,4 +62,5 @@ export {
   CardContent,
   CardActions,
   Link,
+  SaveIcon,
 }

@@ -1,12 +1,13 @@
-import { Component, createSignal, For, Show } from 'solid-js';
+import { Component, createSignal, For, Show, createEffect } from 'solid-js';
 import { CategoryDb } from '../model';
-import { AddIcon, Badge, DeleteIcon, EditIcon, FolderIcon, FolderOpenIcon, IconButton, List, ListItem, ListItemButton, ListItemText } from '../styleguide';
+import { AddIcon, Badge, DeleteIcon, EditIcon, FolderIcon, FolderOpenIcon, IconButton, List, ListItem, ListItemButton, ListItemText, SaveIcon } from '../styleguide';
 import Collapse from '../styleguide/Collapse';
 import Site from './Site';
 import { useSearchParams } from '@solidjs/router'
 
 import styles from './Category.module.css'
-import { articles } from '../state';
+import { articles, setSubscriptions } from '../state';
+import shortid from 'shortid';
 type Props = {
   category: CategoryDb
 }
@@ -14,12 +15,21 @@ type Props = {
 const Category: Component<Props> = (props) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const [isEditing, setIsEditing] = createSignal(props.category.name === 'new category')
+
   const isOpen = () => {
     const categoryIdOpened = searchParams.category
     return categoryIdOpened === props.category.id
   }
 
   const getNumberOfNewArticles = () => articles().filter(({ categoryId }) => categoryId === props.category.id).length
+
+  let inputEl: HTMLInputElement | undefined
+  createEffect(() => {
+    if (isEditing()) {
+      inputEl?.select()
+    }
+  })
 
   return (
     <ListItem disablePadding sx={{
@@ -39,19 +49,44 @@ const Category: Component<Props> = (props) => {
         class={styles.categoryButton}
       >
         {isOpen() ? <FolderOpenIcon /> : <FolderIcon />}
-        <Badge badgeContent={getNumberOfNewArticles()} color="primary">
-          <ListItemText primary={props.category.name} />
-        </Badge>
+        {isEditing()
+          ? <input ref={inputEl} type="text" value={props.category.name} onBlur={(e) => {
+            setSubscriptions('categories', category => category.id === props.category.id, prev => ({ ...prev, name: e.currentTarget.value }))
+            setIsEditing(false)
+          }} />
+          : (
+            <Badge badgeContent={getNumberOfNewArticles()} color="primary">
+              <ListItemText primary={props.category.name} />
+            </Badge>
+          )}
         <div class={styles.buttons}>
-          <Show when={isOpen()}>
+          <Show when={isOpen() && !isEditing()}>
             <IconButton size="small" >
-              <AddIcon />
+              <AddIcon onClick={(e) => {
+                e.stopPropagation()
+                setSubscriptions('categories', category => category.id === props.category.id, prev => ({
+                  ...prev, sites: prev.sites.concat({
+                    id: shortid.generate(),
+                    title: 'new site',
+                    xmlUrl: '',
+                    htmlUrl: '',
+                    starred: false,
+                    errorTimestamps: [],
+                  })
+                }))
+              }} />
             </IconButton>
             <IconButton size="small" >
-              <EditIcon />
+              <EditIcon onClick={(e) => {
+                e.stopPropagation()
+                setIsEditing(true)
+              }} />
             </IconButton>
             <IconButton size="small" >
-              <DeleteIcon />
+              <DeleteIcon onClick={(e) => {
+                e.stopPropagation()
+                setSubscriptions('categories', prev => prev.filter(({ id }) => id !== props.category.id))
+              }} />
             </IconButton>
           </Show>
         </div>

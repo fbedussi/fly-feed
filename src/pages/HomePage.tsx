@@ -1,12 +1,13 @@
-import { Component, onMount } from 'solid-js'
+import { Component, createEffect, onMount } from 'solid-js'
 
 import Header from '../components/Header'
 import LeftDrawer from '../components/LeftDrawer'
 import RightDrawer from '../components/RightDrawer'
 import UpdateButton from '../components/UpdateButton'
 import Main from '../components/Main'
-import { setArticles } from '../state'
+import { setArticles, setSubscriptions } from '../state'
 import openDb from '../cache'
+import { useGetSubscriptions } from '../primitives/useGetSubscriptions'
 
 const HomePage: Component = () => {
   onMount(async () => {
@@ -15,6 +16,14 @@ const HomePage: Component = () => {
         setArticles(cachedDataParsed.articles)
       }
     }))
+
+    const [data] = useGetSubscriptions()
+    createEffect(() => {
+      const subscriptions = data()
+      if (subscriptions) {
+        setSubscriptions(subscriptions)
+      }
+    })
   });
 
   return (

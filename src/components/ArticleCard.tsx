@@ -1,14 +1,13 @@
 import { Component } from 'solid-js';
 import { Article } from '../model';
-import { Button, Card, CardActions, CardContent, Link, Typography } from '../styleguide';
-import { useGetSubscriptions } from '../primitives/useGetSubscriptions';
+import { Card, CardActions, CardContent, Link, Typography } from '../styleguide';
 import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions';
 import styles from './ArticleCard.module.css'
 import { VirtualItemProps } from '@minht11/solid-virtual-container'
+import { subscriptions } from '../state';
 
 const ArticleCard: Component<VirtualItemProps<{ article: Article, siteId: string }>> = (props) => {
-  const [subscriptions] = useGetSubscriptions()
-  const getSiteName = () => useGetSitesFromSubscriptions(subscriptions()).find(({ id }) => id === props.item.siteId)?.title
+  const getSiteName = () => useGetSitesFromSubscriptions(subscriptions).find(({ id }) => id === props.item.siteId)?.title
 
   const date = new Date(props.item.article.isoDate)
   return (

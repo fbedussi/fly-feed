@@ -1,19 +1,17 @@
 import { Component, createSignal, For, Show } from 'solid-js'
 
-import { leftDrawerOpen, setLeftDrawerOpen, user } from '../state'
-import { AddIcon, Button, CloseIcon, Drawer, IconButton, List, TextField, Typography } from '../styleguide'
+import { leftDrawerOpen, setLeftDrawerOpen, setSubscriptions, subscriptions } from '../state'
+import { AddIcon, CloseIcon, Drawer, IconButton, List, TextField, Typography } from '../styleguide'
 import Category from './Category'
 import styles from './LeftDrawer.module.css'
 import Site from './Site'
-import { useGetSubscriptions } from '../primitives/useGetSubscriptions';
 import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions'
+import shortid from 'shortid'
 
 const LeftDrawer: Component = () => {
-  const [data] = useGetSubscriptions()
-
   const [searchTerm, setSearchTerm] = createSignal('')
 
-  const getSitesThatMatchSearchTerm = () => useGetSitesFromSubscriptions(data())
+  const getSitesThatMatchSearchTerm = () => useGetSitesFromSubscriptions(subscriptions)
     .filter(({ title }) =>
       title.toLowerCase().includes(searchTerm().toLowerCase()))
 
@@ -49,11 +47,17 @@ const LeftDrawer: Component = () => {
               <Typography variant="h6" gutterBottom component="div" class={styles.title}>
                 <span>Categories</span>
                 <IconButton>
-                  <AddIcon />
+                  <AddIcon onClick={() => {
+                    setSubscriptions('categories', (prev) => [{
+                      id: shortid.generate(),
+                      name: 'new category',
+                      sites: [],
+                    }, ...prev])
+                  }} />
                 </IconButton>
               </Typography>
               <List>
-                <For each={data()?.categories}>
+                <For each={subscriptions.categories}>
                   {(category, i) => <Category category={category} />}
                 </For>
               </List>
@@ -61,11 +65,20 @@ const LeftDrawer: Component = () => {
               <Typography variant="h6" gutterBottom component="div" class={styles.title}>
                 <span>Sites</span>
                 <IconButton>
-                  <AddIcon />
+                  <AddIcon onClick={() => {
+                    setSubscriptions('sites', (prev) => [{
+                      id: shortid.generate(),
+                      title: 'new site',
+                      xmlUrl: '',
+                      htmlUrl: '',
+                      starred: false,
+                      errorTimestamps: [],
+                    }, ...prev])
+                  }} />
                 </IconButton>
               </Typography>
               <List>
-                <For each={data()?.sites}>
+                <For each={subscriptions.sites}>
                   {(site, i) => <Site site={site} />}
                 </For>
               </List>

@@ -1,15 +1,12 @@
 import { Component, createSignal } from 'solid-js'
 import { Article, FetchKo, FetchOk } from '../model'
 import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions'
-import { useGetSubscriptions } from '../primitives/useGetSubscriptions'
-import { setArticles } from '../state'
+import { setArticles, subscriptions } from '../state'
 
 import { AutorenewIcon, Fab } from '../styleguide'
 import openDb from '../cache';
 
 const UpdateButton: Component = () => {
-  const [data] = useGetSubscriptions()
-
   const [updating, setUpdating] = createSignal(false)
 
   return (
@@ -20,8 +17,8 @@ const UpdateButton: Component = () => {
     }}
       onClick={async () => {
         setUpdating(true)
-        const substriptions = data()
-        const sites = useGetSitesFromSubscriptions(substriptions)
+
+        const sites = useGetSitesFromSubscriptions(subscriptions)
         const sitesToFetch = sites.filter(({ xmlUrl }) => xmlUrl)
 
         const updates = await Promise.all(
