@@ -24,6 +24,7 @@ import FolderOpenIcon from '@suid/icons-material/FolderOpen';
 import EditIcon from '@suid/icons-material/Edit';
 import DeleteIcon from '@suid/icons-material/Delete';
 import SaveIcon from '@suid/icons-material/Save';
+import ClearIcon from '@suid/icons-material/Clear';
 
 export {
   MenuIcon,
@@ -64,4 +65,5 @@ export {
   Link,
   SaveIcon,
   Chip,
+  ClearIcon,
 }

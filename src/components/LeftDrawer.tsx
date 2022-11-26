@@ -1,7 +1,7 @@
 import { Component, createSignal, For, Show } from 'solid-js'
 
 import { leftDrawerOpen, setLeftDrawerOpen, setSubscriptions, subscriptions } from '../state'
-import { AddIcon, CloseIcon, Drawer, IconButton, List, TextField, Typography } from '../styleguide'
+import { AddIcon, ClearIcon, CloseIcon, Drawer, IconButton, List, TextField, Typography } from '../styleguide'
 import Category from './Category'
 import styles from './LeftDrawer.module.css'
 import Site from './Site'
@@ -42,11 +42,15 @@ const LeftDrawer: Component = () => {
               onChange={e => setSearchTerm(e.currentTarget.value)}
               fullWidth
             />
+            <div>
+              <IconButton onClick={() => setSearchTerm('')}>
+                <ClearIcon />
+              </IconButton>
+            </div>
           </div>
 
           <div class={styles.subscriptions}>
             <Show when={!searchTerm()}>
-
               <Typography variant="h6" gutterBottom component="div" class={styles.title}>
                 <span>Categories</span>
                 <IconButton>
