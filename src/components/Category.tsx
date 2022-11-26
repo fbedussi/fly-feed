@@ -9,13 +9,13 @@ import styles from './Category.module.css'
 import { articles, setSubscriptions } from '../state';
 import shortid from 'shortid';
 type Props = {
-  category: CategoryDb
+  category: CategoryDb & { draft?: boolean }
 }
 
 const Category: Component<Props> = (props) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [isEditing, setIsEditing] = createSignal(props.category.name === 'new category')
+  const [isEditing, setIsEditing] = createSignal(props.category.draft)
 
   const isOpen = () => {
     const categoryIdOpened = searchParams.category
@@ -51,12 +51,16 @@ const Category: Component<Props> = (props) => {
         {isOpen() ? <FolderOpenIcon /> : <FolderIcon />}
         {isEditing()
           ? <input ref={inputEl} type="text" value={props.category.name} onBlur={(e) => {
-            setSubscriptions('categories', category => category.id === props.category.id, prev => ({ ...prev, name: e.currentTarget.value }))
+            setSubscriptions('categories', category => category.id === props.category.id, prev => ({ ...prev, name: e.currentTarget.value, draft: undefined }))
             setSubscriptions('draft', true)
             setIsEditing(false)
           }} />
           : (
-            <Badge badgeContent={getNumberOfNewArticles()} color="primary">
+            <Badge
+              badgeContent={getNumberOfNewArticles()}
+              color="primary"
+              sx={{ maxWidth: isOpen() ? 'calc(100% - 10rem)' : 'calc(100% - 3rem)' }}
+            >
               <ListItemText primary={props.category.name} class="textEllipsis" />
             </Badge>
           )}
@@ -71,7 +75,9 @@ const Category: Component<Props> = (props) => {
               <AddIcon onClick={(e) => {
                 e.stopPropagation()
                 setSubscriptions('categories', category => category.id === props.category.id, prev => ({
-                  ...prev, sites: prev.sites.concat({
+                  ...prev,
+                  draft: undefined,
+                  sites: prev.sites.concat({
                     id: shortid.generate(),
                     title: 'new site',
                     xmlUrl: '',

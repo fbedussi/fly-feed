@@ -55,6 +55,7 @@ const LeftDrawer: Component = () => {
                     setSubscriptions('categories', (prev) => [{
                       id: newCategoryId,
                       name: 'new category',
+                      draft: true,
                       sites: [],
                     }, ...prev])
                     setSubscriptions('draft', true)
