@@ -44,7 +44,7 @@ const Category: Component<Props> = (props) => {
           if (searchParams.category === props.category.id) {
             setSearchParams({ ...searchParams, category: undefined }, { replace: true })
           } else {
-            setSearchParams({ ...searchParams, category: props.category.id }, { replace: true })
+            setSearchParams({ ...searchParams, category: props.category.id, site: undefined }, { replace: true })
           }
         }}
         classList={{ [styles.open]: isOpen() }}

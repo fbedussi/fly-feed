@@ -23,9 +23,10 @@ const Main: Component = () => {
 
   const getSelectedSiteName = () => {
     const selectedSiteId = searchParams.site
-    return subscriptions.sites
-      .concat(subscriptions.categories.flatMap(({ sites }) => sites))
-      .find(({ id }) => id === selectedSiteId)?.title
+    const sites = subscriptions.sites.concat(subscriptions.categories.flatMap(({ sites }) => sites))
+    const site = sites.find(({ id }) => id === selectedSiteId)
+    const title = site?.title
+    return title
   }
 
   createEffect(() => {
@@ -55,7 +56,6 @@ const Main: Component = () => {
         {getSelectedCategoryName() && (
           <Chip
             class="textEllipsis"
-            sx={{ maxWidth: '50%' }}
             label={getSelectedCategoryName()}
             variant="outlined"
             color="primary"
@@ -64,10 +64,9 @@ const Main: Component = () => {
             }}
           />
         )}
-        {getSelectedSiteName() && (
+        {!!getSelectedSiteName() && (
           <Chip
             class="textEllipsis"
-            sx={{ maxWidth: '50%' }}
             label={getSelectedSiteName()}
             variant="outlined"
             color="secondary"

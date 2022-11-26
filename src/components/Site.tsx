@@ -44,7 +44,7 @@ const Site: Component<Props> = (props) => {
           if (searchParams.site === props.site.id) {
             setSearchParams({ ...searchParams, site: undefined }, { replace: true })
           } else {
-            setSearchParams({ ...searchParams, site: props.site.id }, { replace: true })
+            setSearchParams({ ...searchParams, site: props.site.id, category: undefined }, { replace: true })
           }
         }}
       >

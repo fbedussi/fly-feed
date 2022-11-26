@@ -6,9 +6,3 @@
   flex: 1;
   overflow: auto;
 }
-
-.selectionChips {
-  display: flex;
-  gap: 1rem;
-  overflow: hidden;
-}
