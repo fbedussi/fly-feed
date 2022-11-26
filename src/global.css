@@ -32,6 +32,10 @@ a:hover {
   color: currentColor;
 }
 
+img {
+  display: block;
+}
+
 html,
 body,
 #root {
