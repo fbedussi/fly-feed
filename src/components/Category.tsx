@@ -22,7 +22,9 @@ const Category: Component<Props> = (props) => {
     return categoryIdOpened === props.category.id
   }
 
-  const getNumberOfNewArticles = () => articles().filter(({ categoryId }) => categoryId === props.category.id).length
+  const getNumberOfNewArticles = () => articles()
+    .filter(({ isNew, categoryId }) => isNew && categoryId === props.category.id)
+    .length
 
   let inputEl: HTMLInputElement | undefined
   createEffect(() => {

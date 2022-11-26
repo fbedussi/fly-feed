@@ -29,7 +29,9 @@ const Site: Component<Props> = (props) => {
     return siteIdSelected === props.site.id
   }
 
-  const getNumberOfNewArticles = () => articles().filter(({ siteId }) => siteId === props.site.id).length
+  const getNumberOfNewArticles = () => articles()
+    .filter(({ isNew, siteId }) => isNew && siteId === props.site.id)
+    .length
 
   return (
     <ListItem disablePadding sx={{

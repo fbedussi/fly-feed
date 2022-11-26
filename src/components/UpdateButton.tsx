@@ -1,7 +1,7 @@
 import { Component, createSignal } from 'solid-js'
 import { Article, FetchKo, FetchOk } from '../model'
 import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions'
-import { setArticles, subscriptions } from '../state'
+import { articles, setArticles, setSubscriptions, subscriptions } from '../state'
 
 import { AutorenewIcon, Fab } from '../styleguide'
 import openDb from '../cache';
@@ -19,7 +19,14 @@ const UpdateButton: Component = () => {
         setUpdating(true)
 
         const sites = useGetSitesFromSubscriptions(subscriptions)
-        const sitesToFetch = sites.filter(({ xmlUrl }) => xmlUrl)
+        const sitesToFetch = sites
+          .filter(({ xmlUrl, errorTimestamps }) => {
+            const lastErrorIsoDate = errorTimestamps.at(-1)
+            const lastErrorTimestamp = lastErrorIsoDate && new Date(lastErrorIsoDate).getTime()
+            const oneDay = 1000 * 60 * 60 * 24
+            const recentError = !!lastErrorTimestamp && (Date.now() - lastErrorTimestamp) < oneDay
+            return !!xmlUrl && !recentError
+          })
 
         const updates = await Promise.all(
           sitesToFetch
@@ -48,19 +55,44 @@ const UpdateButton: Component = () => {
         const isOk = (update: FetchOk[] | FetchKo): update is FetchOk[] => Array.isArray(update)
         const isKo = (update: FetchOk[] | FetchKo): update is FetchKo => !Array.isArray(update)
 
-        const articles = updates.filter(isOk).flat()
+        const newArticles = updates.filter(isOk).flat()
         const errors = updates.filter(isKo)
 
-        // TODO: save errors to subscriptions
+        if (errors.length) {
+          setSubscriptions('categories', ({ id }) => errors.some(({ categoryId }) => categoryId === id), category => {
+            return {
+              ...category,
+              sites: category.sites.map(site => {
+                const errorTimstamp = errors.find(({ siteId }) => siteId === site.id)?.errorTimestamp
+                return {
+                  ...site,
+                  errorTimestamps: errorTimstamp ? site.errorTimestamps.concat(errorTimstamp) : site.errorTimestamps,
+                }
+              })
+            }
+          })
+          setSubscriptions('sites', ({ id }) => errors.some(({ siteId }) => siteId === id), site => {
+            const errorTimstamp = errors.find(({ siteId }) => siteId === site.id)?.errorTimestamp
+            return {
+              ...site,
+              errorTimestamps: errorTimstamp ? site.errorTimestamps.concat(errorTimstamp) : site.errorTimestamps,
+            }
+          })
+          setSubscriptions('draft', true)
+        }
 
-        setArticles(articles)
+        const oldArticles = articles()
+        setArticles(newArticles.map(newArticle => ({
+          ...newArticle,
+          isNew: !oldArticles.find(oldArticle => oldArticle.siteId === newArticle.siteId && oldArticle.article.title === newArticle.article.title)
+        })))
         setUpdating(false)
-        openDb().then((db: any) => db.saveCache({ updatedAt: new Date().toISOString(), articles }))
+        openDb().then((db: any) => db.saveCache({ updatedAt: new Date().toISOString(), articles: newArticles }))
       }}
     >
       <AutorenewIcon sx={{
         animationName: updating() ? 'spin' : 'none',
-        animationDuration: '5000ms',
+        animationDuration: '3000ms',
         animationIterationCount: 'infinite',
         animationTimingFunction: 'linear',
       }} />

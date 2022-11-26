@@ -9,7 +9,12 @@ export const [leftDrawerOpen, setLeftDrawerOpen] = createSignal(false);
 
 export const [rightDrawerOpen, setRightDrawerOpen] = createSignal(false);
 
-export const [articles, setArticles] = createSignal<{ categoryId: string, siteId: string, article: Article }[]>([]);
+export const [articles, setArticles] = createSignal<{
+  categoryId: string,
+  siteId: string,
+  isNew: boolean,
+  article: Article
+}[]>([]);
 
 export const [subscriptions, setSubscriptions] = createStore<SubscriptionsDb & { draft?: boolean }>({
   sites: [],

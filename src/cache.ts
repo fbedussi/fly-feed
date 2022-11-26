@@ -39,7 +39,7 @@ const contentId = '1'
 const saveCache = (content: { updatedAt: IsoDate, articles: FetchOk[] }) =>
   new Promise((resolve, reject) => {
     const transaction = db.transaction([storeName], 'readwrite')
-    const request = transaction.objectStore(storeName).add({ ...content, id: contentId })
+    const request = transaction.objectStore(storeName).put({ ...content, id: contentId })
     transaction.onerror = () =>
       reject(`Error writing to ${storeName}: ${transaction.error}`)
 
