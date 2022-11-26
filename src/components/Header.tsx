@@ -9,7 +9,7 @@ import {
   MenuIcon, Toolbar
 } from '../styleguide'
 import styles from './Header.module.css'
-import { Logo } from './logo'
+import { Logo } from './Logo'
 
 const Header = () => {
   return (

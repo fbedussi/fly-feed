@@ -1,7 +1,7 @@
 import { Component } from 'solid-js'
 
 import { loginBe } from '../backend/login'
-import { Logo } from '../components/logo'
+import { Logo } from '../components/Logo'
 import { setUser } from '../state'
 import { Button, TextField } from '../styleguide'
 import styles from './LoginPage.module.css'
