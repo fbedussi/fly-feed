@@ -5,9 +5,9 @@ import LeftDrawer from '../components/LeftDrawer'
 import RightDrawer from '../components/RightDrawer'
 import UpdateButton from '../components/UpdateButton'
 import Main from '../components/Main'
-import { setArticles, setSubscriptions } from '../state'
+import { setArticles } from '../state'
 import openDb from '../cache'
-import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db'
+import TopDrawer from '../components/TopDrawer'
 
 const HomePage: Component = () => {
   onMount(async () => {
@@ -16,20 +16,12 @@ const HomePage: Component = () => {
         setArticles(cachedDataParsed.articles)
       }
     }))
-
-    const [data] = useGetSubscriptions()
-    createEffect(() => {
-      const subscriptions = data()
-      if (subscriptions) {
-        setSubscriptions(subscriptions)
-      }
-    })
   });
-
-  useSetSubscriptions()
 
   return (
     <>
+      <TopDrawer />
+
       <LeftDrawer />
 
       <RightDrawer />

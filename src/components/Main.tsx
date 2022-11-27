@@ -1,18 +1,21 @@
 import { Component, createEffect } from 'solid-js';
 
 import styles from './Main.module.css'
-import { articles, subscriptions } from '../state';
+import { articles } from '../state';
 import { useSearchParams } from '@solidjs/router';
 import ArticleCard from './ArticleCard';
 import { VirtualContainer } from "@minht11/solid-virtual-container"
 import { Chip } from '../styleguide';
+import { useGetSubscriptions } from '../primitives/db';
 
 const Main: Component = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
+  const subscriptionsQuery = useGetSubscriptions()
+
   const getSelectedCategoryName = () => {
     const selectedCategoryId = searchParams.category
-    return subscriptions.categories.find(({ id }) => id === selectedCategoryId)?.name
+    return subscriptionsQuery.data?.categories.find(({ id }) => id === selectedCategoryId)?.name
   }
 
   createEffect(() => {
@@ -23,8 +26,8 @@ const Main: Component = () => {
 
   const getSelectedSiteName = () => {
     const selectedSiteId = searchParams.site
-    const sites = subscriptions.sites.concat(subscriptions.categories.flatMap(({ sites }) => sites))
-    const site = sites.find(({ id }) => id === selectedSiteId)
+    const sites = subscriptionsQuery.data?.sites.concat(subscriptionsQuery.data.categories.flatMap(({ sites }) => sites))
+    const site = sites?.find(({ id }) => id === selectedSiteId)
     const title = site?.title
     return title
   }

@@ -1,11 +1,10 @@
 import { render } from 'solid-js/web'
 
-/* @refresh reload */
 import { createTheme, ThemeProvider } from '@suid/material'
 
-// import './index.css';
 import App from './App'
 import { Router } from '@solidjs/router'
+import { QueryClient, QueryClientProvider } from '@tanstack/solid-query';
 
 const theme = createTheme({
   palette: {
@@ -15,8 +14,20 @@ const theme = createTheme({
   },
 });
 
-render(() => <ThemeProvider theme={theme}>
-  <Router>
-    <App />
-  </Router>
-</ThemeProvider>, document.getElementById('root') as HTMLElement);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
+
+render(() => (
+  <ThemeProvider theme={theme}>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <App />
+      </Router>
+    </QueryClientProvider>
+  </ThemeProvider>
+), document.getElementById('root') as HTMLElement);

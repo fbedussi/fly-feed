@@ -1,7 +1,6 @@
-import { createSignal, ResourceReturn } from 'solid-js'
-import { createStore } from 'solid-js/store';
+import { createSignal } from 'solid-js'
 
-import { Article, SubscriptionsDb, User } from './model'
+import { Article, SiteDb, User } from './model'
 
 export const [user, setUser] = createSignal<User | null | undefined>(undefined);
 
@@ -16,9 +15,6 @@ export const [articles, setArticles] = createSignal<{
   article: Article
 }[]>([]);
 
-export const [subscriptions, setSubscriptions] = createStore<SubscriptionsDb & { draft?: boolean }>({
-  sites: [],
-  categories: [],
-})
+export const [siteToEdit, setSiteToEdit] = createSignal<SiteDb & { categoryId?: string } | null>(null)
 
 export const MAX_ERRORS = 10

@@ -1,10 +1,11 @@
-import { Component, createEffect, createSignal, Show } from 'solid-js'
+import { Component, Show } from 'solid-js'
 import { SiteDb } from '../model'
-import { Badge, DeleteIcon, EditIcon, IconButton, ListItem, ListItemButton, ListItemText, SaveIcon } from '../styleguide'
+import { Badge, DeleteIcon, EditIcon, IconButton, LinearProgress, ListItem, ListItemButton, ListItemText } from '../styleguide'
 import { useSearchParams } from '@solidjs/router'
 
 import styles from './Site.module.css'
-import { articles, MAX_ERRORS, setSubscriptions } from '../state'
+import { articles, MAX_ERRORS, setSiteToEdit } from '../state'
+import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db'
 
 type Props = {
   site: SiteDb
@@ -15,15 +16,6 @@ type Props = {
 const Site: Component<Props> = (props) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [isEditing, setIsEditing] = createSignal(props.site.title === 'new site')
-
-  let inputEl: HTMLInputElement | undefined
-  createEffect(() => {
-    if (isEditing()) {
-      inputEl?.select()
-    }
-  })
-
   const isSelected = () => {
     const siteIdSelected = searchParams.site
     return siteIdSelected === props.site.id
@@ -33,35 +25,31 @@ const Site: Component<Props> = (props) => {
     .filter(({ isNew, siteId }) => isNew && siteId === props.site.id)
     .length
 
+  const subscriptionsQuery = useGetSubscriptions()
+  const mutation = useSetSubscriptions()
+
   return (
     <ListItem disablePadding sx={{
       ...props.sx,
       backgroundColor: isSelected() ? '#ccc' : 'inherit',
     }}>
-      <ListItemButton
-        sx={{ width: '100%' }}
-        onClick={() => {
-          if (searchParams.site === props.site.id) {
-            setSearchParams({ ...searchParams, site: undefined }, { replace: true })
-          } else {
-            setSearchParams({ ...searchParams, site: props.site.id, category: undefined }, { replace: true })
-          }
-        }}
-      >
-        {isEditing()
-          ? <input ref={inputEl} type="text" value={props.site.title} onBlur={(e) => {
-            if (!props.categoryId) {
-              setSubscriptions('sites', site => site.id === props.site.id, prev => ({ ...prev, title: e.currentTarget.value }))
-            } else {
-              setSubscriptions('categories', category => category.id === props.categoryId, category => ({
-                ...category,
-                sites: category.sites.map(site => site.id === props.site.id ? { ...site, title: e.currentTarget.value } : site)
-              }))
-            }
-            setSubscriptions('draft', true)
-            setIsEditing(false)
-          }} />
-          : (
+      {mutation.isLoading
+        ? (
+          <div class={styles.progressContainer}>
+            <LinearProgress />
+          </div>
+        )
+        : (
+          <ListItemButton
+            sx={{ width: '100%' }}
+            onClick={(e) => {
+              if (searchParams.site === props.site.id) {
+                setSearchParams({ ...searchParams, site: undefined }, { replace: true })
+              } else {
+                setSearchParams({ ...searchParams, site: props.site.id, category: props.categoryId }, { replace: true })
+              }
+            }}
+          >
             <Badge
               badgeContent={getNumberOfNewArticles()}
               color="primary"
@@ -76,41 +64,51 @@ const Site: Component<Props> = (props) => {
                 }}
               />
             </Badge>
-          )}
 
-        <div class={styles.buttons}>
-          {isEditing() && (
-            <IconButton size="small">
-              <SaveIcon />
-            </IconButton>
-          )}
-          <Show when={isSelected() && !isEditing()}>
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                setIsEditing(true)
-              }}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton size="small" onClick={(e) => {
-              e.stopPropagation()
-              if (!props.categoryId) {
-                setSubscriptions('sites', prev => prev.filter(({ id }) => id !== props.site.id))
-              } else {
-                setSubscriptions('categories', category => category.id === props.categoryId, category => ({
-                  ...category,
-                  sites: category.sites.filter(site => site.id !== props.site.id)
-                }))
-              }
-              setSubscriptions('draft', true)
-              setSearchParams({ site: undefined }, { replace: true })
-            }}>
-              <DeleteIcon />
-            </IconButton>
-          </Show>
-        </div>
-      </ListItemButton>
+            <div class={styles.buttons}>
+              <Show when={isSelected()}>
+                <IconButton
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation()
+
+                    setSiteToEdit({ ...props.site, categoryId: props.categoryId })
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton size="small" onClick={(e) => {
+                  e.stopPropagation()
+
+                  if (!subscriptionsQuery.data) {
+                    return
+                  }
+
+                  if (props.categoryId) {
+                    mutation.mutate({
+                      ...subscriptionsQuery.data,
+                      categories: subscriptionsQuery.data.categories.map(category => category.id === props.categoryId
+                        ? {
+                          ...category,
+                          sites: category.sites.filter(site => site.id !== props.site.id)
+                        }
+                        : category)
+                    })
+                  } else {
+                    mutation.mutate({
+                      ...subscriptionsQuery.data,
+                      sites: subscriptionsQuery.data.sites.filter(({ id }) => id !== props.site.id)
+                    })
+                  }
+
+                  setSearchParams({ site: undefined }, { replace: true })
+                }}>
+                  <DeleteIcon />
+                </IconButton>
+              </Show>
+            </div>
+          </ListItemButton>
+        )}
     </ListItem>
   )
 }

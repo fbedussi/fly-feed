@@ -1,13 +1,17 @@
 import { Component, createSignal } from 'solid-js'
 import { Article, FetchKo, FetchOk } from '../model'
 import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions'
-import { articles, MAX_ERRORS, setArticles, setSubscriptions, subscriptions } from '../state'
+import { articles, MAX_ERRORS, setArticles } from '../state'
 
 import { AutorenewIcon, Fab } from '../styleguide'
 import openDb from '../cache';
+import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db'
 
 const UpdateButton: Component = () => {
   const [updating, setUpdating] = createSignal(false)
+
+  const subscriptionsQuery = useGetSubscriptions()
+  const mutation = useSetSubscriptions()
 
   return (
     <Fab color="primary" sx={{
@@ -18,7 +22,7 @@ const UpdateButton: Component = () => {
       onClick={async () => {
         setUpdating(true)
 
-        const sites = useGetSitesFromSubscriptions(subscriptions)
+        const sites = useGetSitesFromSubscriptions(subscriptionsQuery.data)
         const sitesToFetch = sites
           .filter(({ xmlUrl, errorTimestamps }) => {
             const lastErrorIsoDate = errorTimestamps.at(-1)
@@ -58,27 +62,33 @@ const UpdateButton: Component = () => {
         const newArticles = updates.filter(isOk).flat()
         const errors = updates.filter(isKo)
 
-        if (errors.length) {
-          setSubscriptions('categories', ({ id }) => errors.some(({ categoryId }) => categoryId === id), category => {
-            return {
-              ...category,
-              sites: category.sites.map(site => {
-                const errorTimstamp = errors.find(({ siteId }) => siteId === site.id)?.errorTimestamp
-                return {
-                  ...site,
-                  errorTimestamps: errorTimstamp ? site.errorTimestamps.concat(errorTimstamp) : site.errorTimestamps,
+        if (errors.length && subscriptionsQuery.data) {
+          mutation.mutate({
+            ...subscriptionsQuery.data,
+            categories: subscriptionsQuery.data.categories
+              .map(category => errors.some(({ categoryId }) => categoryId === category.id)
+                ? {
+                  ...category,
+                  sites: category.sites.map(site => {
+                    const errorTimstamp = errors.find(({ siteId }) => siteId === site.id)?.errorTimestamp
+                    return {
+                      ...site,
+                      errorTimestamps: errorTimstamp ? site.errorTimestamps.concat(errorTimstamp) : site.errorTimestamps,
+                    }
+                  })
                 }
+                : category),
+            sites: subscriptionsQuery.data.sites
+              .map(site => {
+                const errorTimstamp = errors.find(({ siteId }) => siteId === site.id)?.errorTimestamp
+                return errorTimstamp
+                  ? {
+                    ...site,
+                    errorTimestamps: site.errorTimestamps.concat(errorTimstamp),
+                  }
+                  : site
               })
-            }
           })
-          setSubscriptions('sites', ({ id }) => errors.some(({ siteId }) => siteId === id), site => {
-            const errorTimstamp = errors.find(({ siteId }) => siteId === site.id)?.errorTimestamp
-            return {
-              ...site,
-              errorTimestamps: errorTimstamp ? site.errorTimestamps.concat(errorTimstamp) : site.errorTimestamps,
-            }
-          })
-          setSubscriptions('draft', true)
         }
 
         const oldArticles = articles()

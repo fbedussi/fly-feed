@@ -1,3 +1,8 @@
+.progressContainer {
+  width: 100%;
+  padding: 1rem;
+}
+
 .categoryButton {
   width: 100%;
   gap: 1rem;

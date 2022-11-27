@@ -4,10 +4,12 @@ import { Card, CardActions, CardContent, Link, Typography } from '../styleguide'
 import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions';
 import styles from './ArticleCard.module.css'
 import { VirtualItemProps } from '@minht11/solid-virtual-container'
-import { subscriptions } from '../state';
+import { useGetSubscriptions } from '../primitives/db';
 
 const ArticleCard: Component<VirtualItemProps<{ article: Article, siteId: string }>> = (props) => {
-  const getSiteName = () => useGetSitesFromSubscriptions(subscriptions).find(({ id }) => id === props.item.siteId)?.title
+  const subscriptionsQuery = useGetSubscriptions()
+
+  const getSiteName = () => useGetSitesFromSubscriptions(subscriptionsQuery.data).find(({ id }) => id === props.item.siteId)?.title
 
   const date = new Date(props.item.article.isoDate)
   return (

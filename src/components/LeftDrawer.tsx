@@ -1,6 +1,6 @@
 import { Component, createSignal, For, Show } from 'solid-js'
 
-import { leftDrawerOpen, setLeftDrawerOpen, setSubscriptions, subscriptions } from '../state'
+import { leftDrawerOpen, setLeftDrawerOpen } from '../state'
 import { AddIcon, ClearIcon, CloseIcon, Drawer, IconButton, List, TextField, Typography } from '../styleguide'
 import Category from './Category'
 import styles from './LeftDrawer.module.css'
@@ -8,13 +8,17 @@ import Site from './Site'
 import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions'
 import shortid from 'shortid'
 import { useSearchParams } from '@solidjs/router';
+import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db';
 
 const LeftDrawer: Component = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [searchTerm, setSearchTerm] = createSignal('')
 
-  const getSitesThatMatchSearchTerm = () => useGetSitesFromSubscriptions(subscriptions)
+  const subscriptionsQuery = useGetSubscriptions()
+  const mutation = useSetSubscriptions()
+
+  const getSitesThatMatchSearchTerm = () => useGetSitesFromSubscriptions(subscriptionsQuery.data)
     .filter(({ title }) =>
       title.toLowerCase().includes(searchTerm().toLowerCase()))
 
@@ -56,19 +60,22 @@ const LeftDrawer: Component = () => {
                 <IconButton>
                   <AddIcon onClick={() => {
                     const newCategoryId = shortid.generate()
-                    setSubscriptions('categories', (prev) => [{
-                      id: newCategoryId,
-                      name: 'new category',
-                      draft: true,
-                      sites: [],
-                    }, ...prev])
-                    setSubscriptions('draft', true)
+
+                    subscriptionsQuery.data && mutation.mutate({
+                      ...subscriptionsQuery.data,
+                      categories: [{
+                        id: newCategoryId,
+                        name: 'new category',
+                        sites: [],
+                      }, ...subscriptionsQuery.data.categories],
+                    })
+
                     setSearchParams({ ...searchParams, category: newCategoryId }, { replace: true })
                   }} />
                 </IconButton>
               </Typography>
               <List>
-                <For each={subscriptions.categories}>
+                <For each={subscriptionsQuery.data?.categories}>
                   {(category, i) => <Category category={category} />}
                 </For>
               </List>
@@ -77,20 +84,22 @@ const LeftDrawer: Component = () => {
                 <span>Sites</span>
                 <IconButton>
                   <AddIcon onClick={() => {
-                    setSubscriptions('sites', (prev) => [{
-                      id: shortid.generate(),
-                      title: 'new site',
-                      xmlUrl: '',
-                      htmlUrl: '',
-                      starred: false,
-                      errorTimestamps: [],
-                    }, ...prev])
-                    setSubscriptions('draft', true)
+                    subscriptionsQuery.data && mutation.mutate(({
+                      ...subscriptionsQuery.data,
+                      sites: [{
+                        id: shortid.generate(),
+                        title: 'new site',
+                        xmlUrl: '',
+                        htmlUrl: '',
+                        starred: false,
+                        errorTimestamps: [],
+                      }, ...subscriptionsQuery.data.sites]
+                    }))
                   }} />
                 </IconButton>
               </Typography>
               <List>
-                <For each={subscriptions.sites}>
+                <For each={subscriptionsQuery.data?.sites}>
                   {(site, i) => <Site site={site} />}
                 </For>
               </List>
