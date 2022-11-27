@@ -7,7 +7,10 @@ import { user } from '../state';
 const COLLECTION_NAME = 'subscriptions'
 const TAG = 'subscriptions'
 
-const fetchData = async (userId: string) => {
+const fetchData = async (userId?: string) => {
+  if (!userId) {
+    return
+  }
   const docRef = doc(db, COLLECTION_NAME, userId);
   const querySnapshot = await getDoc(docRef);
   const data = querySnapshot.data() as SubscriptionsDb
@@ -15,11 +18,10 @@ const fetchData = async (userId: string) => {
 }
 
 export const useGetSubscriptions = () => {
-  const userId = user()?.id || ''
-
   const query = createQuery({
     queryKey: () => [TAG],
-    queryFn: () => fetchData(userId),
+    queryFn: () => fetchData(user()?.id),
+    enabled: !!user()?.id,
   })
 
   return query
