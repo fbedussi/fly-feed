@@ -61,6 +61,7 @@ const Main: Component = () => {
             class="textEllipsis"
             label={getSelectedCategoryName()}
             variant="outlined"
+            sx={{ maxWidth: '50%' }}
             color="primary"
             onDelete={() => {
               setSearchParams({ category: undefined }, { replace: true })
@@ -72,6 +73,7 @@ const Main: Component = () => {
             class="textEllipsis"
             label={getSelectedSiteName()}
             variant="outlined"
+            sx={{ maxWidth: '50%' }}
             color="secondary"
             onDelete={() => {
               setSearchParams({ site: undefined }, { replace: true })
