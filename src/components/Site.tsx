@@ -1,6 +1,6 @@
 import { Component, Show } from 'solid-js'
 import { SiteDb } from '../model'
-import { Badge, DeleteIcon, EditIcon, IconButton, LinearProgress, ListItem, ListItemButton, ListItemText } from '../styleguide'
+import { Badge, DeleteIcon, EditIcon, IconButton, LinearProgress, ListItem, ListItemButton, ListItemText, UpdateDisabledIcon } from '../styleguide'
 import { useSearchParams } from '@solidjs/router'
 
 import styles from './Site.module.css'
@@ -41,7 +41,12 @@ const Site: Component<Props> = (props) => {
         )
         : (
           <ListItemButton
-            sx={{ width: '100%' }}
+            sx={{
+              width: '100%',
+              gap: '0.5rem',
+              opacity: props.site.muted ? 0.5 : 1,
+            }}
+
             onClick={(e) => {
               if (searchParams.site === props.site.id) {
                 setSearchParams({ ...searchParams, site: undefined }, { replace: true })
@@ -50,6 +55,7 @@ const Site: Component<Props> = (props) => {
               }
             }}
           >
+            {props.site.muted && <UpdateDisabledIcon />}
             <Badge
               badgeContent={getNumberOfNewArticles()}
               color="primary"

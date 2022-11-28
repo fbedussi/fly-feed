@@ -13,6 +13,8 @@ export type SiteDb = {
   xmlUrl: string
   htmlUrl: string
   starred: boolean
+  muted?: boolean
+  deleted?: boolean
   errorTimestamps: IsoDate[]
 }
 

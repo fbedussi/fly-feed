@@ -6,7 +6,7 @@ import FileDownloadIcon from '@suid/icons-material/FileDownload'
 import FileUploadIcon from '@suid/icons-material/FileUpload'
 import MenuIcon from '@suid/icons-material/Menu'
 import SettingsIcon from '@suid/icons-material/Settings'
-import { Badge, Card, CardActions, CardContent, Chip, Divider, Input, LinearProgress, Link, List, ListItem, ListItemButton, ListItemText, Paper } from '@suid/material'
+import { Badge, Card, CardActions, CardContent, Checkbox, Chip, Divider, FormControlLabel, FormGroup, Input, LinearProgress, Link, List, ListItem, ListItemButton, ListItemText, Paper } from '@suid/material'
 import AppBar from '@suid/material/AppBar'
 import Button from '@suid/material/Button'
 import CircularProgress from '@suid/material/CircularProgress'
@@ -25,6 +25,7 @@ import EditIcon from '@suid/icons-material/Edit';
 import DeleteIcon from '@suid/icons-material/Delete';
 import SaveIcon from '@suid/icons-material/Save';
 import ClearIcon from '@suid/icons-material/Clear';
+import UpdateDisabledIcon from '@suid/icons-material/UpdateDisabled';
 
 export {
   MenuIcon,
@@ -67,4 +68,8 @@ export {
   Chip,
   ClearIcon,
   LinearProgress,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  UpdateDisabledIcon,
 }

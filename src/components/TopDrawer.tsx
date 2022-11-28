@@ -1,6 +1,6 @@
 import { Component, createEffect, createSignal } from 'solid-js'
 
-import { Button, CloseIcon, Drawer, IconButton, TextField } from '../styleguide'
+import { Button, Checkbox, CloseIcon, Drawer, FormControlLabel, FormGroup, IconButton, TextField } from '../styleguide'
 import styles from './TopDrawer.module.css'
 import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db';
 import { useSearchParams } from '@solidjs/router';
@@ -13,6 +13,7 @@ const TopDrawer: Component = () => {
   const [title, setTitle] = createSignal('')
   const [xmlUrl, setXmlUrl] = createSignal('')
   const [htmlUrl, setHtmlUrl] = createSignal('')
+  const [muted, setMuted] = createSignal(false)
 
   createEffect(() => {
     const site = siteToEdit()
@@ -20,6 +21,7 @@ const TopDrawer: Component = () => {
       setTitle(site.title)
       setXmlUrl(site.xmlUrl)
       setHtmlUrl(site.htmlUrl)
+      setMuted(site.muted || false)
     }
   })
 
@@ -52,6 +54,7 @@ const TopDrawer: Component = () => {
                       title: title(),
                       xmlUrl: xmlUrl(),
                       htmlUrl: htmlUrl(),
+                      muted: muted(),
                     }
                     : site
                   )
@@ -67,6 +70,7 @@ const TopDrawer: Component = () => {
                   title: title(),
                   xmlUrl: xmlUrl(),
                   htmlUrl: htmlUrl(),
+                  muted: muted(),
                 }
                 : site),
             })
@@ -77,6 +81,9 @@ const TopDrawer: Component = () => {
           <TextField label="name" value={title()} onChange={e => setTitle(e.currentTarget.value)} />
           <TextField label="rss link" value={xmlUrl()} onChange={e => setXmlUrl(e.currentTarget.value)} />
           <TextField label="web link" value={htmlUrl()} onChange={e => setHtmlUrl(e.currentTarget.value)} />
+          <FormGroup>
+            <FormControlLabel control={<Checkbox checked={muted()} onChange={e => setMuted(!muted())} />} label="Mute" />
+          </FormGroup>
           <div class={styles.buttons}>
             <Button variant="text" onClick={() => setSiteToEdit(null)}>cancel</Button>
             <Button variant="contained" type="submit">save</Button>
