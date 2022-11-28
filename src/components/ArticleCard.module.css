@@ -20,7 +20,7 @@
 }
 
 .cardContent img {
-  width: auto;
+  width: auto !important;
   height: 115px;
 }
 
