@@ -26,6 +26,7 @@ import DeleteIcon from '@suid/icons-material/Delete';
 import SaveIcon from '@suid/icons-material/Save';
 import ClearIcon from '@suid/icons-material/Clear';
 import UpdateDisabledIcon from '@suid/icons-material/UpdateDisabled';
+import KeyboardArrowUpIcon from '@suid/icons-material/KeyboardArrowUp';
 
 export {
   MenuIcon,
@@ -72,4 +73,5 @@ export {
   FormControlLabel,
   Checkbox,
   UpdateDisabledIcon,
+  KeyboardArrowUpIcon,
 }

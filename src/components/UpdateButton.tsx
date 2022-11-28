@@ -1,9 +1,9 @@
 import { Component, createSignal } from 'solid-js'
 import { Article, FetchKo, FetchOk } from '../model'
 import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions'
-import { articles, MAX_ERRORS, setArticles } from '../state'
+import { articles, MAX_ERRORS, setArticles, setScrollToTop, showScrollToTop } from '../state'
 
-import { AutorenewIcon, Fab } from '../styleguide'
+import { AutorenewIcon, Fab, KeyboardArrowUpIcon } from '../styleguide'
 import openDb from '../cache';
 import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db'
 
@@ -20,6 +20,12 @@ const UpdateButton: Component = () => {
       right: '1rem',
     }}
       onClick={async () => {
+
+        if (showScrollToTop()) {
+          setScrollToTop(true)
+          return
+        }
+
         setUpdating(true)
 
         const sites = useGetSitesFromSubscriptions(subscriptionsQuery.data)
@@ -100,13 +106,16 @@ const UpdateButton: Component = () => {
         openDb().then((db: any) => db.saveCache({ updatedAt: new Date().toISOString(), articles: newArticles }))
       }}
     >
-      <AutorenewIcon sx={{
-        animationName: updating() ? 'spin' : 'none',
-        animationDuration: '3000ms',
-        animationIterationCount: 'infinite',
-        animationTimingFunction: 'linear',
-      }} />
-    </Fab>
+      {
+        showScrollToTop()
+          ? < KeyboardArrowUpIcon />
+          : <AutorenewIcon sx={{
+            animationName: updating() ? 'spin' : 'none',
+            animationDuration: '3000ms',
+            animationIterationCount: 'infinite',
+            animationTimingFunction: 'linear',
+          }} />}
+    </Fab >
   )
 }
 

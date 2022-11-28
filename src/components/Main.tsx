@@ -1,7 +1,7 @@
 import { Component, createEffect } from 'solid-js';
 
 import styles from './Main.module.css'
-import { articles } from '../state';
+import { articles, scrollToTop, setScrollToTop, setShowScrollToTop } from '../state';
 import { useSearchParams } from '@solidjs/router';
 import ArticleCard from './ArticleCard';
 import { VirtualContainer } from "@minht11/solid-virtual-container"
@@ -53,8 +53,21 @@ const Main: Component = () => {
 
   let scrollTargetElement!: HTMLDivElement
 
+  createEffect(() => {
+    if (scrollToTop()) {
+      scrollTargetElement.scrollTop = 0
+      setScrollToTop(false)
+    }
+  })
+
   return (
-    <main class={styles.main} ref={scrollTargetElement}>
+    <main class={styles.main} ref={scrollTargetElement} onScroll={e => {
+      if (e.currentTarget.scrollTop > 1000) {
+        setShowScrollToTop(true)
+      } else {
+        setShowScrollToTop(false)
+      }
+    }}>
       <div class={styles.selectionChips}>
         {getSelectedCategoryName() && (
           <Chip

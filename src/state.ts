@@ -18,3 +18,7 @@ export const [articles, setArticles] = createSignal<{
 export const [siteToEdit, setSiteToEdit] = createSignal<SiteDb & { categoryId?: string } | null>(null)
 
 export const MAX_ERRORS = 10
+
+export const [showScrollToTop, setShowScrollToTop] = createSignal(false)
+
+export const [scrollToTop, setScrollToTop] = createSignal(false)
