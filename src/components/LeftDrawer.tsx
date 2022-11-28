@@ -9,6 +9,7 @@ import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubsc
 import shortid from 'shortid'
 import { useSearchParams } from '@solidjs/router';
 import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db';
+import { onSwipe } from '../libs/swipe';
 
 const LeftDrawer: Component = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,9 +23,16 @@ const LeftDrawer: Component = () => {
     .filter(({ title }) =>
       title.toLowerCase().includes(searchTerm().toLowerCase()))
 
+  // https://www.solidjs.com/guides/typescript#use___
+  false && onSwipe
+
   return (
     <Drawer open={leftDrawerOpen()} anchor="left" onClose={() => setLeftDrawerOpen(false)} >
-      <div class={styles.leftDrawerInner}>
+      <div class={styles.leftDrawerInner} use:onSwipe={(direction) => {
+        if (direction === 'left') {
+          setLeftDrawerOpen(false)
+        }
+      }}>
         <div class={styles.closeButtonWrapper}>
           <IconButton
             size="large"
@@ -115,7 +123,7 @@ const LeftDrawer: Component = () => {
           </div>
         </div>
       </div>
-    </Drawer>
+    </Drawer >
   );
 }
 
