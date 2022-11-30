@@ -1,12 +1,12 @@
 import { Component, createSignal, For, Show, createEffect } from 'solid-js';
 import { CategoryDb } from '../model';
-import { AddIcon, Badge, DeleteIcon, EditIcon, FolderIcon, FolderOpenIcon, IconButton, LinearProgress, List, ListItem, ListItemButton, ListItemText, SaveIcon } from '../styleguide';
+import { AddIcon, Badge, DeleteIcon, EditIcon, FolderIcon, FolderOpenIcon, IconButton, LinearProgress, List, ListItem, ListItemButton, ListItemText, SaveIcon, UpdateDisabledIcon } from '../styleguide';
 import Collapse from '../styleguide/Collapse';
 import Site from './Site';
 import { useSearchParams } from '@solidjs/router'
 
 import styles from './Category.module.css'
-import { articles } from '../state';
+import { articles, setCategoryToEdit } from '../state';
 import shortid from 'shortid';
 import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db';
 type Props = {
@@ -16,8 +16,6 @@ type Props = {
 const Category: Component<Props> = (props) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [isEditing, setIsEditing] = createSignal(props.category.draft)
-
   const isOpen = () => {
     const categoryIdOpened = searchParams.category
     return categoryIdOpened === props.category.id
@@ -26,13 +24,6 @@ const Category: Component<Props> = (props) => {
   const getNumberOfNewArticles = () => articles()
     .filter(({ isNew, categoryId }) => isNew && categoryId === props.category.id)
     .length
-
-  let inputEl: HTMLInputElement | undefined
-  createEffect(() => {
-    if (isEditing()) {
-      inputEl?.select()
-    }
-  })
 
   const subscriptionsQuery = useGetSubscriptions()
   const mutation = useSetSubscriptions()
@@ -60,39 +51,25 @@ const Category: Component<Props> = (props) => {
             }}
             classList={{ [styles.open]: isOpen() }}
             class={styles.categoryButton}
+            sx={{
+              opacity: props.category.muted ? 0.5 : 1,
+            }}
           >
             {isOpen() ? <FolderOpenIcon /> : <FolderIcon />}
-            {isEditing()
-              ? <input ref={inputEl} type="text" value={props.category.name} onBlur={(e) => {
-                subscriptionsQuery.data && mutation.mutate({
-                  ...subscriptionsQuery.data,
-                  categories: subscriptionsQuery.data.categories.map(category => category.id === props.category.id
-                    ? {
-                      id: category.id,
-                      name: e.currentTarget.value,
-                      sites: category.sites
-                    }
-                    : category
-                  )
-                })
-                setIsEditing(false)
-              }} />
-              : (
-                <Badge
-                  badgeContent={getNumberOfNewArticles()}
-                  color="primary"
-                  sx={{ maxWidth: isOpen() ? 'calc(100% - 10rem)' : 'calc(100% - 3rem)' }}
-                >
-                  <ListItemText primary={props.category.name} class="textEllipsis" />
-                </Badge>
-              )}
+
+            {props.category.muted && <UpdateDisabledIcon />}
+
+
+            <Badge
+              badgeContent={getNumberOfNewArticles()}
+              color="primary"
+              sx={{ maxWidth: isOpen() ? 'calc(100% - 10rem)' : 'calc(100% - 3rem)' }}
+            >
+              <ListItemText primary={props.category.name} class="textEllipsis" />
+            </Badge>
+
             <div class={styles.buttons}>
-              {isEditing() && (
-                <IconButton size="small">
-                  <SaveIcon />
-                </IconButton>
-              )}
-              <Show when={isOpen() && !isEditing()}>
+              <Show when={isOpen()}>
                 <IconButton size="small" >
                   <AddIcon onClick={(e) => {
                     e.stopPropagation()
@@ -119,25 +96,10 @@ const Category: Component<Props> = (props) => {
                 <IconButton
                   size="small"
                   onClick={(e) => {
-                    setIsEditing(true)
+                    setCategoryToEdit(props.category)
                   }}
                 >
                   <EditIcon />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  onClick={(e) => {
-                    e.stopPropagation()
-
-                    subscriptionsQuery.data && mutation.mutate({
-                      ...subscriptionsQuery.data,
-                      categories: subscriptionsQuery.data.categories.filter(category => category.id !== props.category.id)
-                    })
-
-                    setSearchParams({ category: undefined }, { replace: true })
-                  }}
-                >
-                  <DeleteIcon />
                 </IconButton>
               </Show>
             </div>

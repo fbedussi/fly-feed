@@ -1,6 +1,6 @@
 import { createSignal } from 'solid-js'
 
-import { Article, SiteDb, User } from './model'
+import { Article, CategoryDb, SiteDb, User } from './model'
 
 export const [user, setUser] = createSignal<User | null | undefined>(undefined);
 
@@ -16,6 +16,8 @@ export const [articles, setArticles] = createSignal<{
 }[]>([]);
 
 export const [siteToEdit, setSiteToEdit] = createSignal<SiteDb & { categoryId?: string } | null>(null)
+
+export const [categoryToEdit, setCategoryToEdit] = createSignal<CategoryDb | null>(null)
 
 export const MAX_ERRORS = 10
 

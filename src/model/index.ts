@@ -25,6 +25,8 @@ export type Site = SiteDb & {
 export type CategoryDb = {
   id: string,
   name: string
+  muted?: boolean
+  deleted?: boolean
   sites: SiteDb[]
 }
 

@@ -1,12 +1,14 @@
 import { Component, createEffect, createSignal } from 'solid-js'
 
-import { Button, Checkbox, CloseIcon, Drawer, FormControlLabel, FormGroup, IconButton, TextField } from '../styleguide'
-import styles from './TopDrawer.module.css'
+import { Button, Checkbox, CloseIcon, DeleteIcon, Drawer, FormControlLabel, FormGroup, IconButton, TextField } from '../styleguide'
+import styles from './EditSiteDrawer.module.css'
 import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db';
 import { useSearchParams } from '@solidjs/router';
 import { setSiteToEdit, siteToEdit } from '../state';
 
-const TopDrawer: Component = () => {
+const EditSiteDrawer: Component = () => {
+  const [, setSearchParams] = useSearchParams();
+
   const subscriptionsQuery = useGetSubscriptions()
   const mutation = useSetSubscriptions()
 
@@ -84,6 +86,40 @@ const TopDrawer: Component = () => {
           <FormGroup>
             <FormControlLabel control={<Checkbox checked={muted()} onChange={e => setMuted(!muted())} />} label="Mute" />
           </FormGroup>
+          <Button
+            color="warning"
+            startIcon={<DeleteIcon />}
+            onClick={(e) => {
+              e.stopPropagation()
+
+              if (!subscriptionsQuery.data) {
+                return
+              }
+
+              const categoryId = siteToEdit()?.categoryId
+              const siteId = siteToEdit()?.id
+              if (categoryId) {
+                mutation.mutate({
+                  ...subscriptionsQuery.data,
+                  categories: subscriptionsQuery.data.categories.map(category => category.id === categoryId
+                    ? {
+                      ...category,
+                      sites: category.sites.filter(site => site.id !== siteId)
+                    }
+                    : category)
+                })
+              } else {
+                mutation.mutate({
+                  ...subscriptionsQuery.data,
+                  sites: subscriptionsQuery.data.sites.filter(({ id }) => id !== siteId)
+                })
+              }
+
+              setSearchParams({ site: undefined }, { replace: true })
+            }}
+          >
+            delete
+          </Button>
           <div class={styles.buttons}>
             <Button variant="text" onClick={() => setSiteToEdit(null)}>cancel</Button>
             <Button variant="contained" type="submit">save</Button>
@@ -94,4 +130,4 @@ const TopDrawer: Component = () => {
   );
 }
 
-export default TopDrawer
+export default EditSiteDrawer

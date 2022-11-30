@@ -7,7 +7,8 @@ import UpdateButton from '../components/UpdateButton'
 import Main from '../components/Main'
 import { setArticles } from '../state'
 import openDb from '../cache'
-import TopDrawer from '../components/TopDrawer'
+import EditSiteDrawer from '../components/EditSiteDrawer'
+import EditCategoryDrawer from '../components/EditCategoryDrawer'
 
 const HomePage: Component = () => {
   onMount(async () => {
@@ -20,7 +21,8 @@ const HomePage: Component = () => {
 
   return (
     <>
-      <TopDrawer />
+      <EditSiteDrawer />
+      <EditCategoryDrawer />
 
       <LeftDrawer />
 

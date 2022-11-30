@@ -1,6 +1,6 @@
 import { Component, Show } from 'solid-js'
 import { SiteDb } from '../model'
-import { Badge, DeleteIcon, EditIcon, IconButton, LinearProgress, ListItem, ListItemButton, ListItemText, UpdateDisabledIcon } from '../styleguide'
+import { Badge, EditIcon, IconButton, LinearProgress, ListItem, ListItemButton, ListItemText, UpdateDisabledIcon } from '../styleguide'
 import { useSearchParams } from '@solidjs/router'
 
 import styles from './Site.module.css'
@@ -82,34 +82,6 @@ const Site: Component<Props> = (props) => {
                   }}
                 >
                   <EditIcon />
-                </IconButton>
-                <IconButton size="small" onClick={(e) => {
-                  e.stopPropagation()
-
-                  if (!subscriptionsQuery.data) {
-                    return
-                  }
-
-                  if (props.categoryId) {
-                    mutation.mutate({
-                      ...subscriptionsQuery.data,
-                      categories: subscriptionsQuery.data.categories.map(category => category.id === props.categoryId
-                        ? {
-                          ...category,
-                          sites: category.sites.filter(site => site.id !== props.site.id)
-                        }
-                        : category)
-                    })
-                  } else {
-                    mutation.mutate({
-                      ...subscriptionsQuery.data,
-                      sites: subscriptionsQuery.data.sites.filter(({ id }) => id !== props.site.id)
-                    })
-                  }
-
-                  setSearchParams({ site: undefined }, { replace: true })
-                }}>
-                  <DeleteIcon />
                 </IconButton>
               </Show>
             </div>
