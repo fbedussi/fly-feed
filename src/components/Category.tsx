@@ -109,7 +109,7 @@ const Category: Component<Props> = (props) => {
 
       <Collapse in={isOpen()} >
         <List component="div" disablePadding>
-          <For each={props.category.sites}>
+          <For each={props.category.sites.filter(({ deleted }) => !deleted)}>
             {(site, i) => <Site site={site} categoryId={props.category.id} />}
           </For>
         </List>

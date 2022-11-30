@@ -7,12 +7,6 @@ import { user } from '../state';
 const COLLECTION_NAME = 'subscriptions'
 const TAG = 'subscriptions'
 
-const upgradeSiteSchema = (site: SiteDb) => ({
-  ...site,
-  muted: site.muted === undefined ? false : site.muted,
-  deleted: site.deleted === undefined ? false : site.deleted,
-})
-
 const fetchData = async (userId?: string) => {
   if (!userId) {
     return
@@ -23,11 +17,13 @@ const fetchData = async (userId?: string) => {
 
   return data
   // return {
-  //   sites: data.sites.map(upgradeSiteSchema),
-  //   categories: data.categories.map(category => ({
-  //     ...category,
-  //     sites: category.sites.map(upgradeSiteSchema),
-  //   }))
+  //   sites: data.sites.filter(({ deleted }) => !deleted),
+  //   categories: data.categories
+  //     .filter(({ deleted }) => !deleted)
+  //     .map(category => ({
+  //       ...category,
+  //       sites: category.sites.filter(({ deleted }) => !deleted),
+  //     }))
   // }
 }
 

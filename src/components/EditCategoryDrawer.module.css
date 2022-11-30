@@ -19,7 +19,6 @@
 .muteAndDelete {
   display: flex;
   justify-content: space-between;
-  max-width: 20rem;
 }
 
 .buttons {

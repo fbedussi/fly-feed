@@ -1,6 +1,6 @@
 import { Component, createSignal, For, Show } from 'solid-js'
 
-import { leftDrawerOpen, setLeftDrawerOpen } from '../state'
+import { leftDrawerOpen, setCategoryToEdit, setLeftDrawerOpen } from '../state'
 import { AddIcon, ClearIcon, CloseIcon, Drawer, IconButton, List, TextField, Typography } from '../styleguide'
 import Category from './Category'
 import styles from './LeftDrawer.module.css'
@@ -67,23 +67,23 @@ const LeftDrawer: Component = () => {
                 <span>Categories</span>
                 <IconButton>
                   <AddIcon onClick={() => {
-                    const newCategoryId = shortid.generate()
+                    const newCategory = {
+                      id: shortid.generate(),
+                      name: 'new category',
+                      sites: [],
+                    }
 
                     subscriptionsQuery.data && mutation.mutate({
                       ...subscriptionsQuery.data,
-                      categories: [{
-                        id: newCategoryId,
-                        name: 'new category',
-                        sites: [],
-                      }, ...subscriptionsQuery.data.categories],
+                      categories: [newCategory, ...subscriptionsQuery.data.categories],
                     })
 
-                    setSearchParams({ ...searchParams, category: newCategoryId }, { replace: true })
+                    setCategoryToEdit(newCategory)
                   }} />
                 </IconButton>
               </Typography>
               <List>
-                <For each={subscriptionsQuery.data?.categories}>
+                <For each={subscriptionsQuery.data?.categories.filter(({ deleted }) => !deleted)}>
                   {(category, i) => <Category category={category} />}
                 </For>
               </List>
@@ -107,7 +107,7 @@ const LeftDrawer: Component = () => {
                 </IconButton>
               </Typography>
               <List>
-                <For each={subscriptionsQuery.data?.sites}>
+                <For each={subscriptionsQuery.data?.sites.filter(({ deleted }) => !deleted)}>
                   {(site, i) => <Site site={site} />}
                 </For>
               </List>

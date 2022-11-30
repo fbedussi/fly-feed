@@ -27,6 +27,7 @@ import SaveIcon from '@suid/icons-material/Save';
 import ClearIcon from '@suid/icons-material/Clear';
 import UpdateDisabledIcon from '@suid/icons-material/UpdateDisabled';
 import KeyboardArrowUpIcon from '@suid/icons-material/KeyboardArrowUp';
+import Snackbar from './Snackbar'
 
 export {
   MenuIcon,
@@ -74,4 +75,5 @@ export {
   Checkbox,
   UpdateDisabledIcon,
   KeyboardArrowUpIcon,
+  Snackbar,
 }
