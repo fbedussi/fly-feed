@@ -16,6 +16,11 @@
   gap: 1rem;
 }
 
+.muteAndDelete {
+  display: flex;
+  justify-content: space-between;
+}
+
 .buttons {
   display: flex;
   justify-content: space-around;

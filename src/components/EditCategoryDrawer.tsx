@@ -128,7 +128,8 @@ const EditSiteDrawer: Component = () => {
         onClose={() => {
           setDeletedCategory(null)
         }}
-        action={<Button variant="text" onClick={() => undeleteCategory()}>undo</Button>} />
+        action={<Button variant="text" onClick={() => undeleteCategory()}>undo</Button>}
+      />
     </>
   );
 }

@@ -6,7 +6,7 @@ import Site from './Site';
 import { useSearchParams } from '@solidjs/router'
 
 import styles from './Category.module.css'
-import { articles, setCategoryToEdit } from '../state';
+import { articles, setCategoryToEdit, setSiteToEdit } from '../state';
 import shortid from 'shortid';
 import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db';
 type Props = {
@@ -74,23 +74,27 @@ const Category: Component<Props> = (props) => {
                   <AddIcon onClick={(e) => {
                     e.stopPropagation()
 
+                    const newSite = {
+                      id: shortid.generate(),
+                      title: 'new site',
+                      xmlUrl: '',
+                      htmlUrl: '',
+                      starred: false,
+                      errorTimestamps: [],
+                    }
+
                     subscriptionsQuery.data && mutation.mutate(({
                       ...subscriptionsQuery.data,
                       categories: subscriptionsQuery.data.categories.map(category => category.id === props.category.id
                         ? {
                           id: category.id,
                           name: category.name,
-                          sites: category.sites.concat({
-                            id: shortid.generate(),
-                            title: 'new site',
-                            xmlUrl: '',
-                            htmlUrl: '',
-                            starred: false,
-                            errorTimestamps: [],
-                          })
+                          sites: category.sites.concat(newSite)
                         }
                         : category)
                     }))
+
+                    setSiteToEdit(newSite)
                   }} />
                 </IconButton>
                 <IconButton
