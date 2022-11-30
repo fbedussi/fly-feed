@@ -88,7 +88,7 @@ const LeftDrawer: Component = () => {
                 </For>
               </List>
 
-              <Typography variant="h6" gutterBottom component="div" class={styles.title}>
+              <Typography variant="h6" component="div" class={styles.title}>
                 <span>Sites</span>
                 <IconButton>
                   <AddIcon onClick={() => {

@@ -1,2 +1,4 @@
+- cambiare categoria a sito
+- purge soft deleted
 - salvataggio e uso parametri
 - aricle preview slidedown
