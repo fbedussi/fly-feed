@@ -81,18 +81,8 @@ const Category: Component<Props> = (props) => {
                       htmlUrl: '',
                       starred: false,
                       errorTimestamps: [],
+                      categoryId: props.category.id,
                     }
-
-                    subscriptionsQuery.data && mutation.mutate(({
-                      ...subscriptionsQuery.data,
-                      categories: subscriptionsQuery.data.categories.map(category => category.id === props.category.id
-                        ? {
-                          id: category.id,
-                          name: category.name,
-                          sites: category.sites.concat(newSite)
-                        }
-                        : category)
-                    }))
 
                     setSiteToEdit(newSite)
                   }} />

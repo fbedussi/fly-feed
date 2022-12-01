@@ -1,6 +1,6 @@
 import { Component, createSignal, For, Show } from 'solid-js'
 
-import { leftDrawerOpen, setCategoryToEdit, setLeftDrawerOpen } from '../state'
+import {leftDrawerOpen, setCategoryToEdit, setLeftDrawerOpen, setSiteToEdit} from '../state'
 import { AddIcon, ClearIcon, CloseIcon, Drawer, IconButton, List, TextField, Typography } from '../styleguide'
 import Category from './Category'
 import styles from './LeftDrawer.module.css'
@@ -87,17 +87,14 @@ const LeftDrawer: Component = () => {
                 <span>Sites</span>
                 <IconButton>
                   <AddIcon onClick={() => {
-                    subscriptionsQuery.data && mutation.mutate(({
-                      ...subscriptionsQuery.data,
-                      sites: [{
+                    setSiteToEdit({
                         id: shortid.generate(),
                         title: 'new site',
                         xmlUrl: '',
                         htmlUrl: '',
                         starred: false,
                         errorTimestamps: [],
-                      }, ...subscriptionsQuery.data.sites]
-                    }))
+                      })
                   }} />
                 </IconButton>
               </Typography>

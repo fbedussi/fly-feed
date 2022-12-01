@@ -13,56 +13,86 @@ const EditSiteDrawer: Component = () => {
   const subscriptionsQuery = useGetSubscriptions()
   const mutation = useSetSubscriptions()
 
-  const [title, setTitle] = createSignal('')
-  const [xmlUrl, setXmlUrl] = createSignal('')
-  const [htmlUrl, setHtmlUrl] = createSignal('')
-  const [muted, setMuted] = createSignal(false)
-
-  createEffect(() => {
-    const site = siteToEdit()
-    if (site) {
-      setTitle(site.title)
-      setXmlUrl(site.xmlUrl)
-      setHtmlUrl(site.htmlUrl)
-      setMuted(site.muted || false)
-    }
-  })
-
   const [deletedSite, setDeletedSite] = createSignal<SiteDb & { categoryId?: string } | null>(null)
 
   const updateSite = () => {
-    if (siteToEdit()?.categoryId) {
-      subscriptionsQuery.data && mutation.mutate({
-        ...subscriptionsQuery.data,
-        categories: subscriptionsQuery.data.categories.map(category => category.id === siteToEdit()?.categoryId
-          ? {
-            ...category,
-            sites: category.sites.map(site => site.id === siteToEdit()?.id
-              ? {
-                ...site,
-                title: title(),
-                xmlUrl: xmlUrl(),
-                htmlUrl: htmlUrl(),
-                muted: muted(),
-              }
-              : site
-            )
-          }
-          : category)
-      })
+    const siteToEditData = siteToEdit()
+    if (!siteToEditData) {
+      throw new Error('missing siteToEdit')
+    }
+
+    if (!subscriptionsQuery.data) {
+      throw new Error('no subscriptionsQuery.data')
+    }
+
+    const newSite = {
+      id: siteToEditData.id,
+      title: siteToEditData.title,
+      xmlUrl: siteToEditData.xmlUrl,
+      htmlUrl: siteToEditData.htmlUrl,
+      muted: siteToEditData.muted || false,
+      deleted: false,
+      errorTimestamps: [],
+      starred: false,
+    }
+
+
+    if (siteToEditData.categoryId) {
+      const isNewSite = !subscriptionsQuery.data.categories
+        .find(({ id }) => id === siteToEditData.categoryId)?.sites
+        .some(({ id }) => id === siteToEditData.id)
+
+      const updatedData = isNewSite
+        ? {
+          ...subscriptionsQuery.data,
+          categories: subscriptionsQuery.data.categories.map(category => category.id === siteToEditData.categoryId
+            ? {
+              ...category,
+              sites: category.sites.concat(newSite)
+            }
+            : category)
+        }
+        : {
+          ...subscriptionsQuery.data,
+          categories: subscriptionsQuery.data.categories.map(category => category.id === siteToEditData.categoryId
+            ? {
+              ...category,
+              sites: category.sites.map(site => site.id === siteToEditData.id
+                ? {
+                  ...site,
+                  title: siteToEditData.title,
+                  xmlUrl: siteToEditData.xmlUrl,
+                  htmlUrl: siteToEditData.htmlUrl,
+                  muted: siteToEditData.muted,
+                }
+                : site
+              )
+            }
+            : category)
+        }
+      subscriptionsQuery.data && mutation.mutate(updatedData)
     } else {
-      subscriptionsQuery.data && mutation.mutate({
-        ...subscriptionsQuery.data,
-        sites: subscriptionsQuery.data.sites.map(site => site.id === siteToEdit()?.id
-          ? {
-            ...site,
-            title: title(),
-            xmlUrl: xmlUrl(),
-            htmlUrl: htmlUrl(),
-            muted: muted(),
-          }
-          : site),
-      })
+      const isNewSite = subscriptionsQuery.data?.sites.some(({ id }) => id === siteToEditData.id)
+
+      const updatedData = isNewSite
+        ? {
+          ...subscriptionsQuery.data,
+          sites: subscriptionsQuery.data.sites.concat(newSite)
+        }
+        : {
+          ...subscriptionsQuery.data,
+          sites: subscriptionsQuery.data.sites.map(site => site.id === siteToEditData.id
+            ? {
+              ...site,
+              title: siteToEditData.title,
+              xmlUrl: siteToEditData.xmlUrl,
+              htmlUrl: siteToEditData.htmlUrl,
+              muted: siteToEditData.muted,
+            }
+            : site),
+        }
+
+      subscriptionsQuery.data && mutation.mutate(updatedData)
     }
 
     setSiteToEdit(null)
@@ -164,17 +194,30 @@ const EditSiteDrawer: Component = () => {
               <CloseIcon />
             </IconButton>
           </div>
+
           <form class={styles.content} onSubmit={e => {
             e.preventDefault()
 
             updateSite()
           }}>
-            <TextField label="name" value={title()} onChange={e => setTitle(e.currentTarget.value)} />
-            <TextField label="rss link" value={xmlUrl()} onChange={e => setXmlUrl(e.currentTarget.value)} />
-            <TextField label="web link" value={htmlUrl()} onChange={e => setHtmlUrl(e.currentTarget.value)} />
+            <TextField label="name" value={siteToEdit()?.title || ''} onChange={e => {
+              const siteToEditData = siteToEdit()
+              siteToEditData && setSiteToEdit({ ...siteToEditData, title: e.currentTarget.value });
+            }} />
+            <TextField label="rss link" value={siteToEdit()?.xmlUrl || ''} onChange={e => {
+              const siteToEditData = siteToEdit()
+              siteToEditData && setSiteToEdit({ ...siteToEditData, xmlUrl: e.currentTarget.value });
+            }} />
+            <TextField label="web link" value={siteToEdit()?.htmlUrl || ''} onChange={e => {
+              const siteToEditData = siteToEdit()
+              siteToEditData && setSiteToEdit({ ...siteToEditData, htmlUrl: e.currentTarget.value });
+            }} />
             <div class={styles.muteAndDelete}>
               <FormGroup>
-                <FormControlLabel control={<Checkbox checked={muted()} onChange={e => setMuted(!muted())} />} label="Mute" />
+                <FormControlLabel control={<Checkbox checked={siteToEdit()?.muted || false} onChange={e => {
+                  const siteToEditData = siteToEdit()
+                  siteToEditData && setSiteToEdit({ ...siteToEditData, muted: e.currentTarget.checked });
+                }} />} label="Mute" />
               </FormGroup>
               <Button
                 color="warning"
@@ -200,7 +243,10 @@ const EditSiteDrawer: Component = () => {
         onClose={() => {
           setDeletedSite(null)
         }}
-        action={<Button variant="text" onClick={() => undeleteSite()}>undo</Button>}
+        action={<Button variant="text" onClick={() => {
+          undeleteSite()
+          setDeletedSite(null)
+        }}>undo</Button>}
       />
     </>
   );
