@@ -49,6 +49,43 @@ const Category: Component<Props> = (props) => {
                 setSearchParams({ ...searchParams, category: props.category.id, site: undefined }, { replace: true })
               }
             }}
+            onDragEnter={e => {
+              e.preventDefault()
+            }}
+            onDragOver={e => {
+              e.preventDefault()
+            }}
+            onDrop={e => {
+              e.preventDefault()
+              const dragData = JSON.parse(e.dataTransfer?.getData("text/plain") || "{}");
+
+              const subscriptions = subscriptionsQuery.data
+              if (!subscriptions) {
+                throw new Error('no subscriptions')
+              }
+
+              const updatedData = {
+                ...subscriptions,
+                categories: subscriptions.categories.map((category) => {
+                  if (category.id === dragData?.categoryId) {
+                    return {
+                      ...category,
+                      sites: category.sites.filter(site => site.id !== dragData.site.id)
+                    }
+                  } else if (category.id === props.category.id) {
+                    return {
+                      ...category,
+                      sites: category.sites.concat(dragData.site)
+                    }
+                  } else {
+                    return category
+                  }
+                })
+              }
+
+              mutation.mutate(updatedData)
+
+            }}
             classList={{ [styles.open]: isOpen() }}
             class={styles.categoryButton}
             sx={{

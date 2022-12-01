@@ -5,7 +5,7 @@ import { useSearchParams } from '@solidjs/router'
 
 import styles from './Site.module.css'
 import { articles, MAX_ERRORS, setSiteToEdit } from '../state'
-import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db'
+import { useSetSubscriptions } from '../primitives/db'
 
 type Props = {
   site: SiteDb
@@ -25,14 +25,15 @@ const Site: Component<Props> = (props) => {
     .filter(({ isNew, siteId }) => isNew && siteId === props.site.id)
     .length
 
-  const subscriptionsQuery = useGetSubscriptions()
   const mutation = useSetSubscriptions()
 
   return (
-    <ListItem disablePadding sx={{
-      ...props.sx,
-      backgroundColor: isSelected() ? '#ccc' : 'inherit',
-    }}>
+    <ListItem
+      disablePadding
+      sx={{
+        ...props.sx,
+        backgroundColor: isSelected() ? '#ccc' : 'inherit',
+      }}>
       {mutation.isLoading
         ? (
           <div class={styles.progressContainer}>
@@ -46,7 +47,6 @@ const Site: Component<Props> = (props) => {
               gap: '0.5rem',
               opacity: props.site.muted ? 0.5 : 1,
             }}
-
             onClick={(e) => {
               if (searchParams.site === props.site.id) {
                 setSearchParams({ ...searchParams, site: undefined }, { replace: true })
@@ -62,6 +62,13 @@ const Site: Component<Props> = (props) => {
               sx={{ maxWidth: isSelected() ? 'calc(100% - 5rem)' : 'calc(100% - 1rem)' }}
             >
               <ListItemText
+                draggable
+                onDragStart={e => {
+                  e.dataTransfer && e.dataTransfer.setData("text/plain", JSON.stringify({
+                    site: props.site,
+                    categoryId: props.categoryId,
+                  }));
+                }}
                 primary={props.site.title}
                 classList={{
                   textEllipsis: true,
