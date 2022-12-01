@@ -1,4 +1,4 @@
-import { Component, createEffect, createSignal } from 'solid-js'
+import { Component, createSignal } from 'solid-js'
 
 import { Button, Checkbox, CloseIcon, DeleteIcon, Drawer, FormControlLabel, FormGroup, IconButton, Snackbar, TextField } from '../styleguide'
 import styles from './EditCategoryDrawer.module.css'
@@ -13,17 +13,6 @@ const EditSiteDrawer: Component = () => {
   const subscriptionsQuery = useGetSubscriptions()
   const mutation = useSetSubscriptions()
 
-  const [name, setName] = createSignal('')
-  const [muted, setMuted] = createSignal(false)
-
-  createEffect(() => {
-    const category = categoryToEdit()
-    if (category) {
-      setName(category.name)
-      setMuted(category.muted || false)
-    }
-  })
-
   const [deletedCategory, setDeletedCategory] = createSignal<CategoryDb | null>(null)
 
   const updateCateogry = () => {
@@ -35,18 +24,11 @@ const EditSiteDrawer: Component = () => {
     const isNewCategory = !subscriptionsQuery.data.categories.some(category => category.id === cat.id)
 
     const updatedCategories = isNewCategory
-      ? [{
-        ...cat,
-        name: name(),
-        muted: muted(),
-      } as CategoryDb].concat(subscriptionsQuery.data.categories)
+      ? [cat].concat(subscriptionsQuery.data.categories)
       : subscriptionsQuery.data.categories.map(category => category.id === cat.id
-        ? {
-          ...category,
-          name: name(),
-          muted: muted(),
-        }
-        : category)
+        ? cat
+        : category
+      )
 
     const updatedData = {
       ...subscriptionsQuery.data,
@@ -114,11 +96,17 @@ const EditSiteDrawer: Component = () => {
             e.preventDefault()
             updateCateogry()
           }}>
-            <TextField label="name" value={name()} onChange={e => setName(e.currentTarget.value)} />
+            <TextField label="name" value={categoryToEdit()?.name || ''} onChange={e => {
+              const cat = categoryToEdit()
+              cat && setCategoryToEdit({ ...cat, name: e.currentTarget.value })
+            }} />
 
             <div class={styles.muteAndDelete}>
               <FormGroup>
-                <FormControlLabel control={<Checkbox checked={muted()} onChange={e => setMuted(!muted())} />} label="Mute" />
+                <FormControlLabel control={<Checkbox checked={categoryToEdit()?.muted || false} onChange={e => {
+                  const cat = categoryToEdit()
+                  cat && setCategoryToEdit({ ...cat, muted: e.currentTarget.checked })
+                }} />} label="Mute" />
               </FormGroup>
               <Button
                 color="warning"
@@ -139,6 +127,7 @@ const EditSiteDrawer: Component = () => {
           </form>
         </div>
       </Drawer>
+
       <Snackbar
         open={!!deletedCategory()}
         message={`Categroy ${deletedCategory()?.name} deleted`}
