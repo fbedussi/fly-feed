@@ -14,6 +14,7 @@
   gap: 1rem;
   padding: 0.5rem 1rem;
   z-index: 10000;
+  max-width: 90vw;
 }
 
 .open {
