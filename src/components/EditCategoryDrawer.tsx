@@ -27,16 +27,33 @@ const EditSiteDrawer: Component = () => {
   const [deletedCategory, setDeletedCategory] = createSignal<CategoryDb | null>(null)
 
   const updateCateogry = () => {
-    subscriptionsQuery.data && mutation.mutate({
-      ...subscriptionsQuery.data,
-      categories: subscriptionsQuery.data.categories.map(category => category.id === categoryToEdit()?.id
+    const cat = categoryToEdit()
+    if (!subscriptionsQuery.data || !cat) {
+      return
+    }
+
+    const isNewCategory = !subscriptionsQuery.data.categories.some(category => category.id === cat.id)
+
+    const updatedCategories = isNewCategory
+      ? [{
+        ...cat,
+        name: name(),
+        muted: muted(),
+      } as CategoryDb].concat(subscriptionsQuery.data.categories)
+      : subscriptionsQuery.data.categories.map(category => category.id === cat.id
         ? {
           ...category,
           name: name(),
           muted: muted(),
         }
-        : category),
-    })
+        : category)
+
+    const updatedData = {
+      ...subscriptionsQuery.data,
+      categories: updatedCategories,
+    }
+
+    mutation.mutate(updatedData)
 
     setCategoryToEdit(null)
   }

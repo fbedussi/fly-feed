@@ -73,11 +73,6 @@ const LeftDrawer: Component = () => {
                       sites: [],
                     }
 
-                    subscriptionsQuery.data && mutation.mutate({
-                      ...subscriptionsQuery.data,
-                      categories: [newCategory, ...subscriptionsQuery.data.categories],
-                    })
-
                     setCategoryToEdit(newCategory)
                   }} />
                 </IconButton>

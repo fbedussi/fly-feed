@@ -1,4 +1,5 @@
 - cambiare categoria a sito
 - purge soft deleted
+- lint/prettify autofix
 - salvataggio e uso parametri
 - aricle preview slidedown
