@@ -1,3 +1,41 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opcaity 0.2s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overlay.isOpen {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.leftDrawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  max-width: 90%;
+  transition: transform 0.2s;
+  transform: translateX(-100%);
+  background-color: white;
+  z-index: 2;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.leftDrawer.isOpen {
+  transform: translateX(0);
+}
+
 .leftDrawerInner {
   width: min(90vw, 30rem);
   padding: 1.5rem;
@@ -32,4 +70,23 @@
   display: flex;
   justify-content: space-between;
   margin-top: 2rem;
+}
+
+
+@media screen and (min-width: 1200px) {
+  .overlay {
+    display: none;
+  }
+
+  .leftDrawer {
+    position: static;
+    transform: none;
+    border-right: solid 1px lightgray;
+    z-index: initial;
+    overflow: auto;
+  }
+
+  .closeButtonWrapper {
+    display: none;
+  }
 }

@@ -10,3 +10,9 @@
 .updateButton {
   place-self: center end;
 }
+
+@media screen and (min-width: 1200px) {
+  .menuButton {
+    visibility: hidden;
+  }
+}
