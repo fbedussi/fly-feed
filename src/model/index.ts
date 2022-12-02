@@ -18,10 +18,6 @@ export type SiteDb = {
   errorTimestamps: IsoDate[]
 }
 
-export type Site = SiteDb & {
-  newArticles: number
-}
-
 export type CategoryDb = {
   id: string,
   name: string
@@ -30,18 +26,8 @@ export type CategoryDb = {
   sites: SiteDb[]
 }
 
-export type Category = CategoryDb & {
-  newArticles: number
-}
-
 export type SubscriptionsDb = {
-  sites: SiteDb[]
   categories: CategoryDb[]
-}
-
-export type Subscriptions = {
-  sites: Site[]
-  categories: Category[]
 }
 
 export type Article = {

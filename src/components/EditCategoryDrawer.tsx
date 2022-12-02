@@ -130,7 +130,7 @@ const EditSiteDrawer: Component = () => {
 
       <Snackbar
         open={!!deletedCategory()}
-        message={`Categroy ${deletedCategory()?.name} deleted`}
+        message={`Category ${deletedCategory()?.name} deleted`}
         onClose={() => {
           setDeletedCategory(null)
         }}

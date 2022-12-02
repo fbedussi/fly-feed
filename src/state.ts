@@ -15,7 +15,7 @@ export const [articles, setArticles] = createSignal<{
   article: Article
 }[]>([]);
 
-export const [siteToEdit, setSiteToEdit] = createSignal<SiteDb & { categoryId?: string } | null>(null)
+export const [siteToEdit, setSiteToEdit] = createSignal<SiteDb & { categoryId: string } | null>(null)
 
 export const [categoryToEdit, setCategoryToEdit] = createSignal<CategoryDb | null>(null)
 

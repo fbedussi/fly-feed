@@ -6,12 +6,10 @@ const addCategoryIdToSite = <S extends SiteDb>(site: S, categoryId: string) => (
 })
 
 export const useGetSitesFromSubscriptions = (subscriptions?: SubscriptionsDb) => {
-  const sitesWithoutCategory = (subscriptions?.sites || []).map(site => addCategoryIdToSite(site, ''))
-
   const sitesInCategories = subscriptions?.categories
     .flatMap(({ id, sites }) => sites
       .map(site => addCategoryIdToSite(site, id))
     ) || []
 
-  return sitesWithoutCategory.concat(sitesInCategories)
+  return sitesInCategories
 }

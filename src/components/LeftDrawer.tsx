@@ -82,27 +82,6 @@ const LeftDrawer: Component = () => {
                   {(category, i) => <Category category={category} />}
                 </For>
               </List>
-
-              <Typography variant="h6" component="div" class={styles.title}>
-                <span>Sites</span>
-                <IconButton>
-                  <AddIcon onClick={() => {
-                    setSiteToEdit({
-                        id: shortid.generate(),
-                        title: 'new site',
-                        xmlUrl: '',
-                        htmlUrl: '',
-                        starred: false,
-                        errorTimestamps: [],
-                      })
-                  }} />
-                </IconButton>
-              </Typography>
-              <List>
-                <For each={subscriptionsQuery.data?.sites.filter(({ deleted }) => !deleted)}>
-                  {(site, i) => <Site site={site} />}
-                </For>
-              </List>
             </Show>
 
             <Show when={searchTerm()}>
