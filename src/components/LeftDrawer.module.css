@@ -26,10 +26,11 @@
   transform: translateX(-100%);
   background-color: white;
   z-index: 2;
-  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  overflow: auto;
+
 }
 
 .leftDrawer.isOpen {
@@ -83,7 +84,6 @@
     transform: none;
     border-right: solid 1px lightgray;
     z-index: initial;
-    overflow: auto;
   }
 
   .closeButtonWrapper {
