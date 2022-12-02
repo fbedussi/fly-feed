@@ -36,7 +36,10 @@ const ArticleCard: Component<VirtualItemProps<{ article: Article, siteId: string
               day: "numeric",
             })}
           </Typography>
-          <div class={styles.imageAndText}>
+          <div classList={{
+            [styles.imageAndText]: true,
+            [styles.oneColumn]: !props.item.article.images,
+          }}>
             <div class={styles.text}>
               <Typography variant="body2" class={styles.articleContent} innerHTML={props.item.article.content}/>
             </div>

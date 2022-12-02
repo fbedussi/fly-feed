@@ -21,9 +21,13 @@
 
 .imageAndText {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 2fr 1fr;
   gap: 1rem;
   overflow: hidden;
+}
+
+.oneColumn {
+  grid-template-columns: 1fr;
 }
 
 .imageWrapper {
