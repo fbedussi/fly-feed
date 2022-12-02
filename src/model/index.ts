@@ -36,6 +36,7 @@ export type Article = {
   link: string
   title: string
   starred: boolean
+  images?: string[]
 }
 
 export type FetchOk = {
