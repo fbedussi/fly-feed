@@ -1,8 +1,8 @@
-import { createMutation, createQuery, useQueryClient } from '@tanstack/solid-query';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db } from '../backend/init';
-import { SiteDb, SubscriptionsDb } from '../model';
-import { user } from '../state';
+import {createMutation, createQuery, useQueryClient} from '@tanstack/solid-query';
+import {doc, getDoc, setDoc} from 'firebase/firestore';
+import {db} from '../backend/init';
+import {SubscriptionsDb} from '../model';
+import {user} from '../state';
 
 const COLLECTION_NAME = 'subscriptions'
 const TAG = 'subscriptions'
@@ -13,18 +13,7 @@ const fetchData = async (userId?: string) => {
   }
   const docRef = doc(db, COLLECTION_NAME, userId);
   const querySnapshot = await getDoc(docRef);
-  const data = querySnapshot.data() as SubscriptionsDb
-
-  return data
-  // return {
-  //   sites: data.sites.filter(({ deleted }) => !deleted),
-  //   categories: data.categories
-  //     .filter(({ deleted }) => !deleted)
-  //     .map(category => ({
-  //       ...category,
-  //       sites: category.sites.filter(({ deleted }) => !deleted),
-  //     }))
-  // }
+  return querySnapshot.data() as SubscriptionsDb
 }
 
 export const useGetSubscriptions = () => {
@@ -39,7 +28,6 @@ export const useGetSubscriptions = () => {
 
 const mutateData = async (userId: string, subscriptions: SubscriptionsDb) => {
   return await setDoc(doc(db, COLLECTION_NAME, userId), {
-    sites: subscriptions.sites,
     categories: subscriptions.categories,
   })
 }
@@ -52,7 +40,7 @@ export const useSetSubscriptions = () => {
   const mutation = createMutation({
     mutationFn: (subscriptions: SubscriptionsDb) => mutateData(userId, subscriptions),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [TAG] })
+      queryClient.invalidateQueries({queryKey: [TAG]})
     }
   })
 
