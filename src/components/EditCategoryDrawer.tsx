@@ -15,7 +15,7 @@ const EditSiteDrawer: Component = () => {
 
   const [deletedCategory, setDeletedCategory] = createSignal<CategoryDb | null>(null)
 
-  const updateCateogry = () => {
+  const updateCategory = () => {
     const cat = categoryToEdit()
     if (!subscriptionsQuery.data || !cat) {
       return
@@ -94,7 +94,7 @@ const EditSiteDrawer: Component = () => {
 
           <form class={styles.content} onSubmit={e => {
             e.preventDefault()
-            updateCateogry()
+            updateCategory()
           }}>
             <TextField label="name" value={categoryToEdit()?.name || ''} onChange={e => {
               const cat = categoryToEdit()
@@ -103,9 +103,9 @@ const EditSiteDrawer: Component = () => {
 
             <div class={styles.muteAndDelete}>
               <FormGroup>
-                <FormControlLabel control={<Checkbox checked={categoryToEdit()?.muted || false} onChange={e => {
+                <FormControlLabel control={<Checkbox checked={categoryToEdit()?.muted} onChange={e => {
                   const cat = categoryToEdit()
-                  cat && setCategoryToEdit({ ...cat, muted: e.currentTarget.checked })
+                  cat && setCategoryToEdit({ ...cat, muted: !categoryToEdit()?.muted })
                 }} />} label="Mute" />
               </FormGroup>
               <Button
