@@ -1,12 +1,12 @@
-import { Component, createEffect } from 'solid-js';
+import {Component, createEffect} from 'solid-js';
 
 import styles from './Main.module.css'
-import { articles, scrollToTop, setScrollToTop, setShowScrollToTop } from '../state';
-import { useSearchParams } from '@solidjs/router';
+import {articles, scrollToTop, setScrollToTop, setShowScrollToTop} from '../state';
+import {useSearchParams} from '@solidjs/router';
 import ArticleCard from './ArticleCard';
-import { VirtualContainer } from "@minht11/solid-virtual-container"
-import { Chip } from '../styleguide';
-import { useGetSubscriptions } from '../primitives/db';
+import {VirtualContainer} from "@minht11/solid-virtual-container"
+import {Chip} from '../styleguide';
+import {useGetSubscriptions} from '../primitives/db';
 
 const Main: Component = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -15,12 +15,12 @@ const Main: Component = () => {
 
   const getSelectedCategoryName = () => {
     const selectedCategoryId = searchParams.category
-    return subscriptionsQuery.data?.categories.find(({ id }) => id === selectedCategoryId)?.name
+    return subscriptionsQuery.data?.categories.find(({id}) => id === selectedCategoryId)?.name
   }
 
   createEffect(() => {
     if (!getSelectedCategoryName()) {
-      setSearchParams({ category: undefined })
+      setSearchParams({category: undefined})
     }
   })
 
@@ -34,12 +34,12 @@ const Main: Component = () => {
 
   createEffect(() => {
     if (!getSelectedSiteName()) {
-      setSearchParams({ site: undefined })
+      setSearchParams({site: undefined})
     }
   })
 
   const getFilteredArticles = () => articles()
-    .filter(({ categoryId, siteId }) => {
+    .filter(({categoryId, siteId}) => {
       const categoryMatch = searchParams.category ? categoryId === searchParams.category : true
       const siteMatch = searchParams.site ? siteId === searchParams.site : true
 
@@ -60,6 +60,13 @@ const Main: Component = () => {
     }
   })
 
+  const scrollToTopWhenSelectionChanges = () => {
+    getSelectedSiteName()
+    getSelectedCategoryName()
+    scrollTargetElement.scrollTop = 0
+  }
+  createEffect(scrollToTopWhenSelectionChanges)
+
   return (
     <main class={styles.main} ref={scrollTargetElement} onScroll={e => {
       if (e.currentTarget.scrollTop > 1000) {
@@ -74,10 +81,10 @@ const Main: Component = () => {
             class="textEllipsis"
             label={getSelectedCategoryName()}
             variant="outlined"
-            sx={{ maxWidth: '50%' }}
+            sx={{maxWidth: '50%'}}
             color="primary"
             onDelete={() => {
-              setSearchParams({ category: undefined }, { replace: true })
+              setSearchParams({category: undefined}, {replace: true})
             }}
           />
         )}
@@ -86,10 +93,10 @@ const Main: Component = () => {
             class="textEllipsis"
             label={getSelectedSiteName()}
             variant="outlined"
-            sx={{ maxWidth: '50%' }}
+            sx={{maxWidth: '50%'}}
             color="secondary"
             onDelete={() => {
-              setSearchParams({ site: undefined }, { replace: true })
+              setSearchParams({site: undefined}, {replace: true})
             }}
           />
         )}
@@ -98,7 +105,7 @@ const Main: Component = () => {
         items={getFilteredArticles()}
         scrollTarget={scrollTargetElement}
         // Define size you wish your list items to take.
-        itemSize={{ height: 300 }}
+        itemSize={{height: 300}}
       >
         {ArticleCard as any}
       </VirtualContainer>
