@@ -26,8 +26,8 @@ const Main: Component = () => {
 
   const getSelectedSiteName = () => {
     const selectedSiteId = searchParams.site
-    const sites = subscriptionsQuery.data?.sites.concat(subscriptionsQuery.data.categories.flatMap(({ sites }) => sites))
-    const site = sites?.find(({ id }) => id === selectedSiteId)
+    const sites = subscriptionsQuery.data?.categories.flatMap(({sites}) => sites)
+    const site = sites?.find(({id}) => id === selectedSiteId)
     const title = site?.title
     return title
   }
