@@ -97,6 +97,7 @@ const prepareArticleDataForDb = (
   siteId: articleData.siteId,
   article: {
     ...articleData.article,
+    images: articleData.article.images || [],
     saved: true,
   },
 })
