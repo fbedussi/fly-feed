@@ -1,21 +1,18 @@
 import { createSignal } from 'solid-js'
 
-import { Article, CategoryDb, SiteDb, User } from './model'
+import { CategoryDb, SavedArticle, SiteDb, User } from './model'
 
-export const [user, setUser] = createSignal<User | null | undefined>(undefined);
+export const [user, setUser] = createSignal<User | null | undefined>(undefined)
 
-export const [leftDrawerOpen, setLeftDrawerOpen] = createSignal(false);
+export const [leftDrawerOpen, setLeftDrawerOpen] = createSignal(false)
 
-export const [rightDrawerOpen, setRightDrawerOpen] = createSignal(false);
+export const [rightDrawerOpen, setRightDrawerOpen] = createSignal(false)
 
-export const [articles, setArticles] = createSignal<{
-  categoryId: string,
-  siteId: string,
-  isNew: boolean,
-  article: Article
-}[]>([]);
+export const [articles, setArticles] = createSignal<SavedArticle[]>([])
 
-export const [siteToEdit, setSiteToEdit] = createSignal<SiteDb & { categoryId: string } | null>(null)
+export const [siteToEdit, setSiteToEdit] = createSignal<(SiteDb & { categoryId: string }) | null>(
+  null,
+)
 
 export const [categoryToEdit, setCategoryToEdit] = createSignal<CategoryDb | null>(null)
 

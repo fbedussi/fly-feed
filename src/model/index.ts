@@ -8,18 +8,17 @@ export type User = {
 export type IsoDate = string
 
 export type SiteDb = {
-  id: string,
+  id: string
   title: string
   xmlUrl: string
   htmlUrl: string
-  starred: boolean
   muted?: boolean
   deleted?: boolean
   errorTimestamps: IsoDate[]
 }
 
 export type CategoryDb = {
-  id: string,
+  id: string
   name: string
   muted?: boolean
   deleted?: boolean
@@ -35,8 +34,15 @@ export type Article = {
   isoDate: IsoDate
   link: string
   title: string
-  starred: boolean
+  saved?: boolean
   images?: string[]
+}
+
+export type SavedArticle = {
+  categoryId: string
+  siteId: string
+  isNew?: boolean
+  article: Article
 }
 
 export type FetchOk = {
