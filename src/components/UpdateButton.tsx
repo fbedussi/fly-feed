@@ -26,17 +26,19 @@ const UpdateButton: Component = () => {
   const mutation = useSetSubscriptions()
 
   return (
-    <Fab color="primary" sx={{
-      position: 'fixed',
-      bottom: '1rem',
-      right: '1rem',
-    }}
-         onClick={async () => {
-
-           if (showScrollToTop()) {
-             setScrollToTop(true)
-             return
-           }
+    <Fab
+      color={showScrollToTop() ? 'secondary' : 'primary'}
+      sx={{
+        position: 'fixed',
+        bottom: '1rem',
+        right: '1rem',
+      }}
+      disabled={updating()}
+      onClick={async () => {
+        if (showScrollToTop()) {
+          setScrollToTop(true)
+          return
+        }
 
            setUpdating(true)
 
