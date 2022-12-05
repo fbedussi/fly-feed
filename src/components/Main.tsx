@@ -53,8 +53,8 @@ const Main: Component = () => {
         return categoryMatch && siteMatch
       })
       .sort((a1, a2) => {
-        const t1 = new Date(a1.article.isoDate).getTime()
-        const t2 = new Date(a2.article.isoDate).getTime()
+        const t1 = new Date(a1.article.isoDate || 0).getTime()
+        const t2 = new Date(a2.article.isoDate || 0).getTime()
         return t2 - t1
       })
 
