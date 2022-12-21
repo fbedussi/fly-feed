@@ -1,4 +1,4 @@
-import { Component, createEffect } from 'solid-js'
+import { Component, createEffect, createSignal } from 'solid-js'
 
 import styles from './Main.module.css'
 import { articles, scrollToTop, setArticles, setScrollToTop, setShowScrollToTop } from '../state'
@@ -76,6 +76,24 @@ const Main: Component = () => {
   }
   createEffect(scrollToTopWhenSelectionChanges)
 
+  const [colWidth, setColWidth] = createSignal(window.innerWidth)
+  const updateColWidth = () => {
+    if (scrollTargetElement) {
+      const availableWidth = scrollTargetElement.clientWidth - 16
+      const colWidth =
+        availableWidth < 700
+          ? window.innerWidth
+          : availableWidth < 1400
+          ? Math.floor(availableWidth / 2)
+          : Math.floor(availableWidth / 3)
+      setColWidth(colWidth)
+    }
+  }
+  createEffect(updateColWidth)
+  createEffect(() => {
+    window.addEventListener('resize', updateColWidth)
+  })
+
   return (
     <main
       class={styles.main}
@@ -117,8 +135,13 @@ const Main: Component = () => {
       <VirtualContainer
         items={getFilteredArticles()}
         scrollTarget={scrollTargetElement}
-        // Define size you wish your list items to take.
-        itemSize={{ height: 300 }}
+        itemSize={{
+          height: 300,
+          width: colWidth(),
+        }}
+        crossAxisCount={measurements =>
+          Math.floor(measurements.container.cross / measurements.itemSize.cross)
+        }
       >
         {ArticleCard}
       </VirtualContainer>
