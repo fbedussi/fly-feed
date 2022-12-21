@@ -3,7 +3,7 @@
     height: 100%;
 
     /* leave room for the shadow */
-    padding: 3px;
+    padding: 3px 1rem;
 }
 
 .card {
@@ -17,6 +17,24 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+}
+
+.title {
+    height: 2.4em;
+    line-height: 1.2 !important;
+    overflow: hidden;
+    position: relative;
+}
+
+.title::after {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 50%;
+    width: 4em;
+    background: linear-gradient(to right, transparent, white);
+    bottom: 0;
+    right: 0;
 }
 
 .imageAndText {

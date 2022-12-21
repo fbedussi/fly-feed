@@ -51,7 +51,7 @@ const ArticleCard: Component<
             {props.item.isNew && <NewIcon color="primary" />}
           </Typography>
           <a href={props.item.article.link} target="_blank">
-            <Typography variant="h6" component="div" class="textEllipsis">
+            <Typography variant="h6" component="div" class={styles.title}>
               {props.item.article.title}
             </Typography>
           </a>
