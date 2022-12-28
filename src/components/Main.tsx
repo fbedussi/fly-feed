@@ -1,12 +1,20 @@
 import { Component, createEffect, createSignal } from 'solid-js'
 
 import styles from './Main.module.css'
-import { articles, scrollToTop, setArticles, setScrollToTop, setShowScrollToTop } from '../state'
+import {
+  articles,
+  scrollToTop,
+  setArticles,
+  setLeftDrawerOpen,
+  setScrollToTop,
+  setShowScrollToTop,
+} from '../state'
 import { useSearchParams } from '@solidjs/router'
 import ArticleCard from './ArticleCard'
 import { VirtualContainer } from '@minht11/solid-virtual-container'
 import { Chip } from '../styleguide'
 import { useGetSavedArticles, useGetSubscriptions } from '../primitives/db'
+import { onSwipe } from '../libs/swipe'
 
 const Main: Component = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -94,8 +102,16 @@ const Main: Component = () => {
     window.addEventListener('resize', updateColWidth)
   })
 
+  // https://www.solidjs.com/guides/typescript#use___
+  false && onSwipe
+
   return (
     <main
+      use:onSwipe={direction => {
+        if (direction === 'right') {
+          setLeftDrawerOpen(true)
+        }
+      }}
       class={styles.main}
       ref={scrollTargetElement}
       onScroll={e => {
