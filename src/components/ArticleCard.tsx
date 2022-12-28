@@ -1,19 +1,16 @@
 import { Component } from 'solid-js'
-import { Article } from '../model'
-import {
-  Card,
-  CardContent,
-  IconButton,
-  Link,
-  NewIcon,
-  StarBorderIcon,
-  StarIcon,
-  Typography,
-} from '../styleguide'
-import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions'
-import styles from './ArticleCard.module.css'
+
 import { VirtualItemProps } from '@minht11/solid-virtual-container'
+
+import { Article } from '../model'
 import { useDeleteArticle, useGetSubscriptions, useSaveArticle } from '../primitives/db'
+import { useGetSitesFromSubscriptions } from '../primitives/useGetSitesFromSubscriptions'
+import {
+  Card, CardContent, IconButton,
+  Link, NewIcon, StarBorderIcon,
+  StarIcon, Typography
+} from '../styleguide'
+import styles from './ArticleCard.module.css'
 
 const ArticleCard: Component<
   VirtualItemProps<{ article: Article; siteId: string; categoryId: string; isNew?: boolean }>
@@ -48,7 +45,7 @@ const ArticleCard: Component<
             gutterBottom
           >
             {getCategoryName(props.item.categoryId)}/{getSiteName()}{' '}
-            {props.item.isNew && <NewIcon color="primary" />}
+            {props.item.isNew && <Typography color="primary"><NewIcon /></Typography>}
           </Typography>
           <a href={props.item.article.link} target="_blank">
             <Typography variant="h6" component="div" class={styles.title}>
@@ -69,13 +66,11 @@ const ArticleCard: Component<
               [styles.oneColumn]: !props.item.article.images,
             }}
           >
-            <div class={styles.text}>
-              <Typography
-                variant="body2"
-                class={styles.articleContent}
-                innerHTML={props.item.article.content}
-              />
-            </div>
+            <Typography
+              variant="body2"
+              class={styles.articleContent}
+              innerHTML={props.item.article.content}
+            />
             {!!props.item.article.images && (
               <div class={styles.imageWrapper} innerHTML={props.item.article.images[0]} />
             )}
@@ -86,12 +81,12 @@ const ArticleCard: Component<
             Read More
           </Link>
           {props.item.article.saved ? (
-            <IconButton onClick={() => deleteArticleMutation.mutate(props.item)}>
-              <StarIcon color="primary" />
+            <IconButton color="primary" onClick={() => deleteArticleMutation.mutate(props.item)}>
+              <StarIcon />
             </IconButton>
           ) : (
-            <IconButton onClick={() => saveArticleMutation.mutate(props.item)}>
-              <StarBorderIcon color="primary" />
+            <IconButton color="primary" onClick={() => saveArticleMutation.mutate(props.item)}>
+              <StarBorderIcon />
             </IconButton>
           )}
         </div>
