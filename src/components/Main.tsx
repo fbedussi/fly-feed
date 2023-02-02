@@ -87,7 +87,7 @@ const Main: Component = () => {
   const [colWidth, setColWidth] = createSignal(window.innerWidth)
   const updateColWidth = () => {
     if (scrollTargetElement) {
-      const availableWidth = scrollTargetElement.clientWidth - 16
+      const availableWidth = scrollTargetElement.clientWidth - 20
       const colWidth =
         availableWidth < 700
           ? window.innerWidth
