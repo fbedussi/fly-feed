@@ -1,14 +1,25 @@
 import { Component, createSignal } from 'solid-js'
 
-import { Button, Checkbox, CloseIcon, DeleteIcon, Drawer, FormControlLabel, FormGroup, IconButton, Snackbar, TextField } from '../styleguide'
+import {
+  Button,
+  Checkbox,
+  CloseIcon,
+  DeleteIcon,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  Snackbar,
+  TextField,
+} from '../styleguide'
 import styles from './EditCategoryDrawer.module.css'
-import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db';
-import { useSearchParams } from '@solidjs/router';
-import { categoryToEdit, setCategoryToEdit } from '../state';
-import { CategoryDb } from '../model';
+import { useGetSubscriptions, useSetSubscriptions } from '../primitives/db'
+import { useSearchParams } from '@solidjs/router'
+import { categoryToEdit, setCategoryToEdit } from '../state'
+import { CategoryDb } from '../model'
+import TopDrawer from './TopDrawer'
 
 const EditSiteDrawer: Component = () => {
-  const [, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams()
 
   const subscriptionsQuery = useGetSubscriptions()
   const mutation = useSetSubscriptions()
@@ -21,14 +32,15 @@ const EditSiteDrawer: Component = () => {
       return
     }
 
-    const isNewCategory = !subscriptionsQuery.data.categories.some(category => category.id === cat.id)
+    const isNewCategory = !subscriptionsQuery.data.categories.some(
+      category => category.id === cat.id,
+    )
 
     const updatedCategories = isNewCategory
       ? [cat].concat(subscriptionsQuery.data.categories)
-      : subscriptionsQuery.data.categories.map(category => category.id === cat.id
-        ? cat
-        : category
-      )
+      : subscriptionsQuery.data.categories.map(category =>
+          category.id === cat.id ? cat : category,
+        )
 
     const updatedData = {
       ...subscriptionsQuery.data,
@@ -48,12 +60,14 @@ const EditSiteDrawer: Component = () => {
     const categoryId = categoryToEdit()?.id
     mutation.mutate({
       ...subscriptionsQuery.data,
-      categories: subscriptionsQuery.data.categories.map(category => category.id === categoryId
-        ? {
-          ...category,
-          deleted: true,
-        }
-        : category)
+      categories: subscriptionsQuery.data.categories.map(category =>
+        category.id === categoryId
+          ? {
+              ...category,
+              deleted: true,
+            }
+          : category,
+      ),
     })
 
     setDeletedCategory(categoryToEdit())
@@ -64,21 +78,24 @@ const EditSiteDrawer: Component = () => {
   }
 
   const undeleteCategory = () => {
-    subscriptionsQuery.data && mutation.mutate({
-      ...subscriptionsQuery.data,
-      categories: subscriptionsQuery.data.categories.map(category => category.id === deletedCategory()?.id
-        ? {
-          ...category,
-          deleted: false,
-        }
-        : category)
-    })
+    subscriptionsQuery.data &&
+      mutation.mutate({
+        ...subscriptionsQuery.data,
+        categories: subscriptionsQuery.data.categories.map(category =>
+          category.id === deletedCategory()?.id
+            ? {
+                ...category,
+                deleted: false,
+              }
+            : category,
+        ),
+      })
     setDeletedCategory(null)
   }
 
   return (
     <>
-      <Drawer open={!!categoryToEdit()} anchor="top" onClose={() => setCategoryToEdit(null)} >
+      <TopDrawer open={!!categoryToEdit()} onClose={() => setCategoryToEdit(null)}>
         <div class={styles.topDrawerInner}>
           <div class={styles.closeButtonWrapper}>
             <IconButton
@@ -92,26 +109,41 @@ const EditSiteDrawer: Component = () => {
             </IconButton>
           </div>
 
-          <form class={styles.content} onSubmit={e => {
-            e.preventDefault()
-            updateCategory()
-          }}>
-            <TextField label="name" value={categoryToEdit()?.name || ''} onChange={e => {
-              const cat = categoryToEdit()
-              cat && setCategoryToEdit({ ...cat, name: e.currentTarget.value })
-            }} />
+          <form
+            class={styles.content}
+            onSubmit={e => {
+              e.preventDefault()
+              updateCategory()
+            }}
+          >
+            <TextField
+              label="name"
+              value={categoryToEdit()?.name || ''}
+              onChange={e => {
+                const cat = categoryToEdit()
+                cat && setCategoryToEdit({ ...cat, name: e.currentTarget.value })
+              }}
+            />
 
             <div class={styles.muteAndDelete}>
               <FormGroup>
-                <FormControlLabel control={<Checkbox checked={categoryToEdit()?.muted} onChange={e => {
-                  const cat = categoryToEdit()
-                  cat && setCategoryToEdit({ ...cat, muted: !categoryToEdit()?.muted })
-                }} />} label="Mute" />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={categoryToEdit()?.muted}
+                      onChange={e => {
+                        const cat = categoryToEdit()
+                        cat && setCategoryToEdit({ ...cat, muted: !categoryToEdit()?.muted })
+                      }}
+                    />
+                  }
+                  label="Mute"
+                />
               </FormGroup>
               <Button
                 color="warning"
                 startIcon={<DeleteIcon />}
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation()
                   deleteCategory()
                 }}
@@ -121,12 +153,16 @@ const EditSiteDrawer: Component = () => {
             </div>
 
             <div class={styles.buttons}>
-              <Button variant="text" onClick={() => setCategoryToEdit(null)}>cancel</Button>
-              <Button variant="contained" type="submit">save</Button>
+              <Button variant="text" onClick={() => setCategoryToEdit(null)}>
+                cancel
+              </Button>
+              <Button variant="contained" type="submit">
+                save
+              </Button>
             </div>
           </form>
         </div>
-      </Drawer>
+      </TopDrawer>
 
       <Snackbar
         open={!!deletedCategory()}
@@ -134,13 +170,20 @@ const EditSiteDrawer: Component = () => {
         onClose={() => {
           setDeletedCategory(null)
         }}
-        action={<Button variant="text" onClick={() => {
-          undeleteCategory()
-          setDeletedCategory(null)
-        }}>undo</Button>}
+        action={
+          <Button
+            variant="text"
+            onClick={() => {
+              undeleteCategory()
+              setDeletedCategory(null)
+            }}
+          >
+            undo
+          </Button>
+        }
       />
     </>
-  );
+  )
 }
 
 export default EditSiteDrawer
