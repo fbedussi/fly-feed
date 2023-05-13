@@ -1,3 +1,6 @@
 {
-  "cSpell.words": ["styleguide"]
+  "cSpell.words": [
+    "styleguide"
+  ],
+  "prettier.configPath": ".prettierrc"
 }
