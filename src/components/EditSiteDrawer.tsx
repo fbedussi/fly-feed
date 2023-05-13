@@ -153,6 +153,8 @@ const EditSiteDrawer: Component = () => {
     setSearchParams({site: undefined}, {replace: true})
   }
 
+  let nameInputRef: HTMLInputElement
+
   return (
     <>
       <Drawer open={!!siteToEdit()} anchor="top" onClose={() => setSiteToEdit(null)}>
@@ -172,20 +174,18 @@ const EditSiteDrawer: Component = () => {
           <form class={styles.content} onSubmit={e => {
             e.preventDefault()
 
-            updateSite()
-          }}>
-            <TextField label="name" value={siteToEdit()?.title || ''} onChange={e => {
-              const siteToEditData = siteToEdit()
-              siteToEditData && setSiteToEdit({...siteToEditData, title: e.currentTarget.value});
-            }}/>
-            <TextField label="rss link" value={siteToEdit()?.xmlUrl || ''} onChange={e => {
-              const siteToEditData = siteToEdit()
-              siteToEditData && setSiteToEdit({...siteToEditData, xmlUrl: e.currentTarget.value});
-            }}/>
-            <TextField label="web link" value={siteToEdit()?.htmlUrl || ''} onChange={e => {
-              const siteToEditData = siteToEdit()
-              siteToEditData && setSiteToEdit({...siteToEditData, htmlUrl: e.currentTarget.value});
-            }}/>
+            <TextField
+              inputRef={ref => {
+                nameInputRef = ref
+              }}
+              onFocus={() => nameInputRef.select()}
+              label="name"
+              value={siteToEdit()?.title || ''}
+              onChange={e => {
+                const siteToEditData = siteToEdit()
+                siteToEditData && setSiteToEdit({ ...siteToEditData, title: e.currentTarget.value })
+              }}
+            />
             <div class={styles.muteAndDelete}>
               <FormGroup>
                 <FormControlLabel
