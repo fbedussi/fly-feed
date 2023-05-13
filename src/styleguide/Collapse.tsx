@@ -1,4 +1,4 @@
-import { Component, ParentComponent } from 'solid-js'
+import { ParentComponent } from 'solid-js'
 import styles from './Collapse.module.css'
 
 type Props = {
