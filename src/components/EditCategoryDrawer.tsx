@@ -93,6 +93,8 @@ const EditSiteDrawer: Component = () => {
     setDeletedCategory(null)
   }
 
+  let nameInputRef: HTMLInputElement
+
   return (
     <>
       <TopDrawer open={!!categoryToEdit()} onClose={() => setCategoryToEdit(null)}>
@@ -118,6 +120,10 @@ const EditSiteDrawer: Component = () => {
           >
             <TextField
               label="name"
+              inputRef={ref => {
+                nameInputRef = ref
+              }}
+              onFocus={() => nameInputRef.select()}
               value={categoryToEdit()?.name || ''}
               onChange={e => {
                 const cat = categoryToEdit()
