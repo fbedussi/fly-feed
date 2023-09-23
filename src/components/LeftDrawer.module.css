@@ -30,7 +30,7 @@
   flex-direction: column;
   gap: 2rem;
   overflow: auto;
-
+  width: min(90vw, 30rem);
 }
 
 .leftDrawer.isOpen {
@@ -38,7 +38,6 @@
 }
 
 .leftDrawerInner {
-  width: min(90vw, 30rem);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -84,6 +83,7 @@
     transform: none;
     border-right: solid 1px lightgray;
     z-index: initial;
+    resize: horizontal;
   }
 
   .closeButtonWrapper {
