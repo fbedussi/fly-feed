@@ -10,7 +10,7 @@ export const [rightDrawerOpen, setRightDrawerOpen] = createSignal(false)
 
 export const [articles, setArticles] = createSignal<SavedArticle[]>([])
 
-export const [siteToEdit, setSiteToEdit] = createSignal<(SiteDb & { categoryId: string }) | null>(
+export const [siteToEdit, setSiteToEdit] = createSignal<(SiteDb & { categoryId?: string }) | null>(
   null,
 )
 
