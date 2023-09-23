@@ -49,6 +49,7 @@ import Snackbar from './Snackbar'
 import StarIcon from '@suid/icons-material/Star'
 import StarBorderIcon from '@suid/icons-material/StarBorder'
 import NewIcon from '@suid/icons-material/FiberNew'
+import LinkIcon from '@suid/icons-material/Link'
 
 export {
   MenuIcon,
@@ -100,4 +101,5 @@ export {
   StarIcon,
   StarBorderIcon,
   NewIcon,
+  LinkIcon,
 }
